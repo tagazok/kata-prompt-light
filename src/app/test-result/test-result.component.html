@@ -1,0 +1,24 @@
+<div *ngIf="result.numTotalTests" class="padding-1">
+    <div class="result" [ngClass]="{'passed': result.success, 
+    'failed': !result.success}">
+        <span *ngIf="result.success">Pass</span>
+        <span *ngIf="!result.success">Failed</span>
+    </div>
+
+    <div class="test-ratio-pass margin-bottom-1">{{+result.numPassedTests}} tests out of {{+result.numTotalTests}} passed.</div>
+
+    <div class="tests flex flex-direction-row flex-wrap-wrap">
+        <div *ngFor="let test of result.testResults[0].assertionResults; index as i">
+            <div class="test-item">
+                <div class="flex flex-direction-row">
+                    <!-- <span [ngClass]="{'passed' : test.status}">•</span> -->
+                    <div class="status-dot" [ngClass]="{'passed': test.status === 'passed', 
+                'failed': test.status === 'failed'}">•</div>
+                    <div class="flex align-items-center test-label">Test {{i + 1}}</div>
+                </div>
+                <!-- <div>Name: {{test.fullName}}</div>
+            <div>Duration: {{test.duration}}ms</div> -->
+            </div>
+        </div>
+    </div>
+</div>

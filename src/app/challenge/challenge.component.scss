@@ -1,0 +1,126 @@
+
+:host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .nav {
+        .title {
+
+        }
+        .language {
+
+        }
+
+        .challenge {
+
+        }
+    }
+    .main {
+        overflow: hidden;
+
+        .container {
+            height: 100%;
+        }
+    }
+}
+
+.panel {
+    /* padding: .4em; */
+
+    .bloc {
+        padding: .5em;
+
+        .content {
+            width: 100%;
+            height: 100%;
+
+            background-color: var(--bloc-content-bg-color);
+            /* margin: 1em; */
+            border: solid 1px var(--bloc-content-border-color);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+
+            .header {
+                padding: 1em;
+                background-color: var(--bloc-content-hf-bg-color);
+                border-bottom: solid 1px var(--bloc-content-hf-border-color);
+            }
+
+            .footer {
+                padding: 1em;
+                background-color: var(--bloc-content-hf-bg-color);
+                border-top: solid 1px var(--bloc-content-hf-border-color);
+            }
+
+            .footer:has(.actions) {
+                padding: .3em;
+            }
+
+            .body {
+                overflow: hidden;
+                padding: 1em;
+            }
+
+            .body:has(.terminal) {
+                padding: 0;
+            }
+        }
+    }
+}
+
+.panel-left {
+    width: 500px;
+    max-width: 30%;
+}https://amazon.awsapps.com/workdocs-preview/index.html#/folder/4e8850cf79c57096a937642f2dca8317b3b8abca9ee329f3432c8ecc535668a5
+
+.panel-center {}
+
+#prompt-input {
+    width: 100%;
+    padding: .7em;
+    /* font-size: 1rem; */
+    border-radius: 4px;
+    border: solid 1px #c7c7c7;
+    height: 200px;
+    resize: none;
+    overflow-y: auto;
+}
+
+.results {
+    height: 50%;
+}
+
+
+.code {
+    height: 100%;
+}
+.proposed-code {
+    width: 100%;
+    overflow: hidden;
+}
+
+
+// XTERM
+.xterm {
+    cursor: text;
+    position: relative;
+    user-select: none;
+}
+
+.xterm.focus,
+.xterm:focus {
+    outline: none;
+}
+
+// .xterm .xterm-helpers {
+//     position: absolute;
+//     top: 0;
+//     /**
+//      * The z-index of the helpers must be higher than the canvases in order for
+//      * IMEs to appear on top.
+//      */
+//     z-index: 5;
+// }

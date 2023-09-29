@@ -1,1 +1,42 @@
-/* You can add global styles to this file, and also import other style files */
+* {
+    box-sizing: border-box;
+}
+
+// :root {
+//     --main-bg-color: #1a1a1a;
+//     --main-text-color: #fff;
+
+
+//     --bloc-content-bg-color: #282828;
+//     --bloc-content-hf-bg-color: #353535;
+//     --bloc-content-hf-border-color: #4c4c4c;
+//     --bloc-content-border-color: #4d4d4d;
+
+
+// }
+
+
+:root {
+    --main-bg-color: #fff;
+    --main-text-color: #17113a;
+
+    --bloc-content-bg-color: #fafcfd;
+    --bloc-content-hf-bg-color: #fff;
+    --bloc-content-hf-border-color: #e9e9e9;
+    --bloc-content-border-color: #e0e0e0;
+}
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: var(--main-bg-color);
+    color: var(--main-text-color);
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.code pre {
+    margin: 0 !important;
+    border-radius: 0 !important;
+    height: 100%;
+}

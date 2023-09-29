@@ -1,0 +1,125 @@
+@use 'sass:math';
+
+.flex {
+    display: flex;
+}
+
+.flex-grow {
+    flex-grow: 1;
+}
+
+$flex-direction: (row, column, row-reverse, column-reverse);
+
+$properties: (
+    "flex-direction": $flex-direction,
+    "justify-content": (
+        space-between,
+        space-around,
+        center,
+        flex-start,
+        flex-end,
+        space-evenly,
+    ),
+    "align-items": (
+        flex-start,
+        flex-end,
+        center,
+        stretch,
+        baseline,
+    ),
+    "align-content": (
+        flex-start,
+        flex-end,
+        center,
+        stretch,
+        space-between,
+        space-around,
+    ),
+    "align-self": (
+        center,
+    ),
+    "flex-wrap": (
+        wrap,
+        nowrap,
+        wrap-reverse,
+    ),
+);
+
+$borders: (
+    "padding": (
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+    ),
+    "margin": (
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+    ),
+);
+
+@each $name, $property in $properties {
+    @each $value in $property {
+        .flex.#{$name}-#{$value} {
+            #{$name}: $value;
+        }
+    }
+}
+
+@each $name, $property in $borders {
+    @each $value in $property {
+        .#{$name}-#{$value} {
+            #{$name}: #{$value}em;
+        }
+        @each $direction in (left, right, top, bottom) {
+            .#{$name}-#{$direction}-#{$value} {
+                #{$name}-#{$direction}: #{$value}em;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    @each $name, $property in $borders {
+        @each $value in $property {
+            .#{$name}-mobile-#{$value} {
+                #{$name}: #{$value}rem;
+            }
+            @each $direction in (left, right, top, bottom) {
+                .#{$name}-#{$direction}-mobile-#{$value} {
+                    #{$name}-#{$direction}: #{$value}em;
+                }
+            }
+        }
+    }
+
+    @each $value in $flex-direction {
+        .flex.flex-direction-mobile-#{$value} {
+            flex-direction: $value;
+        }
+    }
+}
+
+@each $opacity in (1, 2, 3, 4, 5, 6, 7, 8, 9) {
+    .opacity-#{$opacity} {
+        opacity: math.div($opacity, 10);
+    }
+}
+
+@each $radius in (0, 1, 2, 3, 4, 5, 6, 7, 8, 9) {
+    .border-radius-#{$radius} {
+        border-radius: #{$radius}px;
+    }
+}
+
+.no-padding {
+    padding: 0 !important;
+}

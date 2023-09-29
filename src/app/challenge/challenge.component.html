@@ -1,0 +1,70 @@
+<div class="nav padding-1">
+    <div class="title"></div>
+    <div>
+        <!-- <div class="language">{{currentLanguage}}</div> -->
+        <div class="challenge">Challenge #{{currentChallenge}}</div>
+    </div>
+</div>
+
+<div class="main flex-grow">
+    <div class="container flex flex-direction-row">
+        <div class="panel panel-left flex flex-direction-column">
+            <div class="bloc enonce flex-grow">
+                <div class="content">
+                    <div class="header">
+                        Problem statment
+                    </div>
+                    <div class="body">
+                        {{challengeDescription}}
+                    </div>
+                </div>
+            </div>
+            <div class="bloc prompt">
+                <div class="content">
+                    <form id="new-message-form" [formGroup]="newMessageFormGroup">
+                        <textarea id="prompt-input" placeholder="Let's code together!"
+                            formControlName="promptFormControl"></textarea>
+                    </form>
+                    <button mat-flat-button color="primary" (click)="generateCode()">Generate code!</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-center flex-grow flex flex-direction-column">
+            <div class="bloc proposed-code flex flex-grow">
+                <div class="content">
+                    <div class="header">Code</div>
+                    <div class="body flex-grow no-padding">
+                    <div class="code" [innerHTML]="proposedCode | language : 'javascript' | markdown"></div>
+                    </div>
+                    <div class="footer">
+                        <div class="actions flex justify-content-flex-end">
+                            <!-- <button id="run">Test</button> -->
+                            <button mat-flat-button color="primary" (click)="runTests()">Run test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bloc results">
+                <div class="content">
+                    <!-- <div class="header">
+                    Results
+                </div> -->
+                    <div class="body flex-grow no-padding">
+                        <mat-tab-group animationDuration="0ms">
+                            <mat-tab label="Results">
+                                <app-test-result [result]="jsonResult"></app-test-result>
+                            </mat-tab>
+                            <mat-tab label="Tests">
+                                <div class="code" [innerHTML]="tests | language : 'javascript' | markdown"></div>
+                            </mat-tab>
+                            <mat-tab label="Terminal">
+                                <div class="terminal" id="terminal" #terminal></div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
