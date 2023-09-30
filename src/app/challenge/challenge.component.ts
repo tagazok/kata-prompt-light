@@ -14,16 +14,22 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChallengeComponent implements OnInit, AfterViewInit {
   @ViewChild('terminal') terminalEl?: ElementRef;
+  @ViewChild('promptInput') promptInput: any;
 
+  initialPromptInputHeight: number = 0;
+  numberofLinesInPromptInput: Array<number> = [0,1];
+  environmentReady:boolean = false;
   webcontainerInstance: any;
   terminal: Terminal;
   tests: any;
   proposedCode: string;
+  loadinActivities: Set<string>;
 
   currentLanguage = "javascript";
   currentChallenge = "001";
   jsonResult = {};
   challengeDescription = "";
+  challengeData: any = {};
 
   availableLanguages = ['javascript', 'python'];
 
@@ -41,7 +47,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   ) {
     this.updateCurrentChallengePath();
     this.proposedCode = "";
-   
+    this.loadinActivities = new Set();
     this.terminal = new Terminal({
       convertEol: true,
     });
@@ -51,6 +57,9 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   updateCurrentChallengePath() {
     this.currentChallengePath = files[this.currentLanguage].directory[this.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
+
+    console.log();
+    this.challengeData = JSON.parse(this.currentChallengePath['data.json']?.file?.contents || {});
     this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
   }
 
@@ -71,6 +80,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.initialPromptInputHeight = this.promptInput.nativeElement.scrollHeight;
+
     if (this.terminalEl) {
       this.terminal.open(this.terminalEl.nativeElement);
     }
@@ -78,17 +89,34 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     this.init();
   }
 
+  addLoading(operation: string) {
+    this.loadinActivities.add(operation);
+  }
+
+  removeLoading(operation: string) {
+    this.loadinActivities.delete(operation);
+  }
   async init() {
 
     // Call only once
+    this.addLoading("Booting webcontainer");
     this.webcontainerInstance = await WebContainer.boot();
+    this.removeLoading("Booting webcontainer");
+
+    console.log(files);
+    this.addLoading("Mounting webcontaine");
     await this.webcontainerInstance.mount(files);
+    this.removeLoading("Mounting webcontaine");
     this.startShell();
 
+    this.addLoading("Installing dependancies");
     const exitCode = await this.installDependencies(this.terminal);
     if (exitCode !== 0) {
       throw new Error('Installation failed');
+    } else {
+      this.environmentReady = true;
     };
+    this.removeLoading("Installing dependancies");
   }
 
 
@@ -108,21 +136,25 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   }
 
   generatePrompt() {
-    let input = `The generated code should be in ${this.currentLanguage}.
-    `;
+
+    let input = `
+    The generated code should be in ${this.currentLanguage}.
+    `
 
     // Write a function in JavaScript called "sum" that takes 2 parameters and returns their sum
     input += this.newMessageFormGroup.value.promptFormControl || `Write a function in ${this.currentLanguage} called 'sum' that takes 2 parameters and returns their sum`;
     const prompt = `
     ${input}
-      Then export the function and only this function, not an object so I can run some tests on it
       In your reponse, put the code of the function between the <lc-code></lc-code> xml tags
     `;
+
+    // TODO: Add the export myself
 
     return prompt;
   }
 
   async generateCode() {
+    this.addLoading("Generating code");
     const bedrockResponse = await this.bedrockService.callClaudeV2(this.generatePrompt());
     console.log(bedrockResponse.completion);
 
@@ -146,6 +178,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
       console.log(error);
     } finally {
       // console.log(files['app.js']);
+
+    this.removeLoading("Generating code");
     }
   }
 
@@ -198,4 +232,12 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
 
     return shellProcess;
   };
+
+  onInputInput(e: any) {
+    this.promptInput.nativeElement.style.height = `${this.initialPromptInputHeight}px`;
+    this.promptInput.nativeElement.style.height = `${this.promptInput.nativeElement.scrollHeight}px`;
+    const nbLines = Math.round(this.promptInput.nativeElement.scrollHeight / 18 );
+
+    this.numberofLinesInPromptInput = Array(nbLines).fill(0).map((x,i)=>i);
+  }
 }

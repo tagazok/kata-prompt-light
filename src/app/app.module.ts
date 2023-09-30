@@ -12,7 +12,9 @@ import { MarkdownModule } from 'ngx-markdown';
 import { HighlightService } from './highlight.service';
 import { TestResultComponent } from './test-result/test-result.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatTabsModule,
     MatButtonModule,
     BrowserAnimationsModule,
+    MatMenuModule,
+    MatSidenavModule,
     MarkdownModule.forRoot()
   ],
   providers: [

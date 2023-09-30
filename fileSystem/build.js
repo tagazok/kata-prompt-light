@@ -11,7 +11,6 @@ languageToExtension = {
 async function getPackageJSON() {
     try {
         const data = await fs.readFile('./files/package.json', { encoding: 'utf8' });
-        // console.log(data);
         return data;
     } catch (err) {
         // console.log(err);
@@ -37,8 +36,13 @@ async function generateChallenges() {
             const test = await fs.readFile(`./files/challenges/${language}/${challenge}/test.${languageToExtension[language]}`, { encoding: 'utf8' });
 
             let challengeDescription = "";
+            let challengeData = "";
+
             try {
                 challengeDescription = await fs.readFile(`./files/challenges/${language}/${challenge}/challenge.txt`, { encoding: 'utf8' });
+
+                challengeData = await fs.readFile(`./files/challenges/${language}/${challenge}/data.json`, { encoding: 'utf8' });
+
                 console.log(challengeDescription);
             } catch (error) {
                 console.log(error);
@@ -48,16 +52,14 @@ async function generateChallenges() {
             obj[language].directory[challenge] = {
                 directory: {
                     [filename]: { file: {contents: `${test}`} },
-                    "challenge.txt": { file: { contents: `${challengeDescription}`}}
+                    "challenge.txt": { file: { contents: `${challengeDescription}`}},
+                    "data.json": { file: { contents: `${challengeData}`}},
                 }
             };
-            
-            // console.log(test);
-
         }
     }
     require('util').inspect.defaultOptions.depth = null;
-    // console.log(obj);
+   
     return obj;
 }
 
@@ -68,18 +70,10 @@ async function writeFile(text) {
     ;
         `;
         // console.log(fileContent);
-    fs.writeFile('./files.ts', fileContent);
+    fs.writeFile('../src/app/challenge/files.ts', fileContent);
 }
 async function buildFile() {
-    // const packageJSON = await getPackageJSON();
-   
-    // files['package.json'] = {
-    //     file: {
-    //         contents: `\`${packageJSON}\``
-    //     }
-    // };
     
-
     const obj = await generateChallenges();
     const packageJSON = await getPackageJSON();
     obj['package.json'] = {

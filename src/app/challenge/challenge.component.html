@@ -1,55 +1,48 @@
-<div class="nav padding-1">
-    <div class="title"></div>
-    <div>
+<div class="nav">
+    <!-- <div class="title"></div> -->
+    <div class="flex flex-direction-row justify-content-space-between">
         <!-- <div class="language">{{currentLanguage}}</div> -->
-        <div class="challenge">Challenge #{{currentChallenge}}</div>
+        <div class="challenge flex align-items-center">Challenge #{{currentChallenge}} - {{challengeData?.name}}</div>
+        <div class="environment flex align-items-center">
+            <div class="margin-right-2">{{environmentReady}}</div>
+            <!-- <div *ngIf="loading.size > 0" class="lds-ring flex align-items-center"><div></div><div></div><div></div><div></div></div> -->
+
+            <button mat-button [matMenuTriggerFor]="menu">
+                <div *ngIf="loadinActivities.size > 0" class="lds-ring flex align-items-center"><div></div><div></div><div></div><div></div></div>
+                <div *ngIf="loadinActivities.size === 0" class="flex align-items-center">
+                    ✔️
+                </div>
+            </button>
+            <mat-menu #menu="matMenu" class="padding-left-1 padding-right-1">
+                <div *ngFor="let activity of loadinActivities">
+                    <div class="activity">{{activity}}</div>
+                </div>
+                <div *ngIf="loadinActivities.size === 0" class="resting">
+                    Resting... 😴
+                </div>
+            </mat-menu>
+        </div>
     </div>
 </div>
 
-<div class="main flex-grow">
+<div class="main flex-grow overflow-hidden">
     <div class="container flex flex-direction-row">
-        <div class="panel panel-left flex flex-direction-column">
+        <div class="panel panel-left flex flex-direction-column overflow-hidden">
             <div class="bloc enonce flex-grow">
                 <div class="content">
                     <div class="header">
                         Problem statment
                     </div>
-                    <div class="body">
-                        {{challengeDescription}}
-                    </div>
-                </div>
-            </div>
-            <div class="bloc prompt">
-                <div class="content">
-                    <form id="new-message-form" [formGroup]="newMessageFormGroup">
-                        <textarea id="prompt-input" placeholder="Let's code together!"
-                            formControlName="promptFormControl"></textarea>
-                    </form>
-                    <button mat-flat-button color="primary" (click)="generateCode()">Generate code!</button>
-                </div>
-            </div>
-        </div>
-        <div class="panel panel-center flex-grow flex flex-direction-column">
-            <div class="bloc proposed-code flex flex-grow">
-                <div class="content">
-                    <div class="header">Code</div>
-                    <div class="body flex-grow no-padding">
-                    <div class="code" [innerHTML]="proposedCode | language : 'javascript' | markdown"></div>
-                    </div>
-                    <div class="footer">
-                        <div class="actions flex justify-content-flex-end">
-                            <!-- <button id="run">Test</button> -->
-                            <button mat-flat-button color="primary" (click)="runTests()">Run test</button>
-                        </div>
+                    <div class="body overflow-auto" markdown [data]="challengeDescription">
                     </div>
                 </div>
             </div>
             <div class="bloc results">
                 <div class="content">
-                    <!-- <div class="header">
-                    Results
-                </div> -->
-                    <div class="body flex-grow no-padding">
+                    <div class="header">
+                        Tests results
+                    </div>
+                    <div class="body flex no-padding overflow-hidden">
                         <mat-tab-group animationDuration="0ms">
                             <mat-tab label="Results">
                                 <app-test-result [result]="jsonResult"></app-test-result>
@@ -64,6 +57,69 @@
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="panel panel-center flex-grow flex flex-direction-column overflow-hidden">
+            <!-- <div class="bloc prompt">
+                <div class="content">
+                    <form id="new-message-form" [formGroup]="newMessageFormGroup">
+                        <textarea id="prompt-input" placeholder="Let's code together!"
+                            formControlName="promptFormControl"></textarea>
+                    </form>
+                    <button mat-flat-button color="primary" (click)="generateCode()">Generate code!</button>
+                </div>
+            </div> -->
+            <div class="bloc proposed-code flex flex-grow overflow-hidden">
+                <div class="content">
+                    <div class="header">Code</div>
+                    <div class="body flex-grow no-padding overflow-hidden">
+
+                        <div class="prompt">
+                            <form id="new-message-form" [formGroup]="newMessageFormGroup">
+                                <div>/**</div>
+                                <div class="flex flex-direction-row">
+                                    <div class="stars">
+                                        <div *ngFor="let star of numberofLinesInPromptInput" class="star">*</div>
+                                    </div>
+                                    <textarea id="prompt-input" #promptInput (input)="onInputInput($event)" placeholder="Let's code together. Tell me what you want."
+                                    formControlName="promptFormControl"></textarea>
+                                    <!-- <div contenteditable="true">coucou</div> -->
+                                </div>
+                                <div>**/</div>
+                            </form>
+
+                            <!-- <div class="actions flex justify-content-flex-end padding-1">
+                                <button mat-flat-button color="primary" (click)="generateCode()">Generate code!</button>
+                            </div> -->
+                        </div>
+                        <div class="code" [innerHTML]="proposedCode | language : 'javascript' | markdown"></div>
+                    </div>
+                    <div class="footer">
+                        <div class="actions flex flex-direction-row justify-content-flex-end">
+                            <!-- <button id="run">Test</button> -->
+                            <button mat-flat-button color="primary" (click)="generateCode()" class="margin-right-1">Generate code!</button>
+                            <button mat-flat-button color="primary" (click)="runTests()">Run test</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="bloc results">
+                <div class="content">
+                    <div class="body flex-grow no-padding">
+                        <mat-tab-group animationDuration="0ms">
+                            <mat-tab label="Results">
+                                <app-test-result [result]="jsonResult"></app-test-result>
+                            </mat-tab>
+                            <mat-tab label="Tests">
+                                <div class="code" [innerHTML]="tests | language : 'javascript' | markdown"></div>
+                            </mat-tab>
+                            <mat-tab label="Terminal">
+                                <div class="terminal" id="terminal" #terminal></div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </div> -->
         </div>
 
     </div>

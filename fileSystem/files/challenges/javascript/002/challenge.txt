@@ -1,0 +1,8 @@
+**ROT42**
+
+ROT42 ("rotate by 42 places") is a simple letter substitution cipher that replaces a letter with the 42th letter after it in the latin alphabet. ROT42 is a special case of the Caesar cipher which was developed in ancient Rome.
+
+Function prototype:
+```javascript
+function rot42(str) { }
+```
