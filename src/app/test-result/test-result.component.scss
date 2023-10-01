@@ -5,7 +5,7 @@
         border: solid 1px rgba(0,0,0, .06);
         margin: 0 1em 1em 0;
         border-radius: 4px;
-        background-color: rgba(0,0,0, .05);
+        // background-color: rgba(0,0,0, .05); 
         padding: 0em 1em;
 
         .status-dot {
@@ -25,13 +25,23 @@
     font-weight: bold;
 }
 
-.test-ratio-pass {
-
-}
-.passed {
+.result.passed {
     color: #4cae4c;
 }
-.failed {
+
+.result.failed {
     color: #d9534f;
+}
+.test-item.passed {
+    background-color: #edf7ed;
+    .status-dot {
+        color: #4cae4c;
+    }
+}
+.test-item.failed {
+    background-color: #f6eeee;
+    .status-dot {
+        color: #d9534f;
+    }
 }
 

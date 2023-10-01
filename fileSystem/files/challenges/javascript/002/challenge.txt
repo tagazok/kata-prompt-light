@@ -1,8 +1,9 @@
-**ROT42**
+**Division**
 
-ROT42 ("rotate by 42 places") is a simple letter substitution cipher that replaces a letter with the 42th letter after it in the latin alphabet. ROT42 is a special case of the Caesar cipher which was developed in ancient Rome.
+A function that divide 2 numbers
 
-Function prototype:
+Example of function call:
 ```javascript
-function rot42(str) { }
+divide(4, 2);
+// => 2
 ```

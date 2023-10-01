@@ -1,4 +1,3 @@
-
 :host {
     width: 100%;
     height: 100%;
@@ -10,17 +9,13 @@
         border-bottom: solid 1px #cac5cb;
         padding: .5em;
 
-        .title {
+        .title {}
 
-        }
-        .language {
+        .language {}
 
-        }
-
-        .challenge {
-
-        }
+        .challenge {}
     }
+
     .main {
         overflow: hidden;
 
@@ -28,6 +23,17 @@
             height: 100%;
         }
     }
+}
+
+mat-list-item.selected {
+    background-color: #d2bfd1;
+}
+
+mat-sidenav-content {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .panel {
@@ -87,16 +93,23 @@
         font-size: .8em;
     }
 }
-
 .results {
     mat-tab-group {
         width: 100%;
     }
 }
+
 .panel-center {}
 
-.prompt {
+.prompt, .export {
     background-color: #272822;
+}
+
+.export {
+    color: #fff;
+}
+
+.prompt {
     color: #8292a2;
 }
 #new-message-form {
@@ -124,6 +137,7 @@
             line-height: 18px;
         }
     }
+
     // div[contenteditable] {
     //     outline: 0px solid transparent;
     //     width: 100%;
@@ -150,6 +164,7 @@
 .code {
     height: 100%;
 }
+
 .proposed-code {
     width: 100%;
     overflow: hidden;
@@ -181,4 +196,32 @@
 
 .resting {
     color: #8c8c8c
+}
+
+mat-sidenav-container {
+    height: 100%;
+}
+
+mat-sidenav {
+    max-width: 100%;
+    min-width: 250px;
+}
+
+.my-sidenav-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .header {
+        padding: 1rem;
+    }
+
+    h4 {
+        margin: 0;
+    }
+
+    .challenges {
+        flex: 1;
+        overflow-y: auto;
+    }
 }

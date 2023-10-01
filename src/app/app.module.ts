@@ -14,6 +14,8 @@ import { TestResultComponent } from './test-result/test-result.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatListModule } from '@angular/material/list';
+import {MatIconModule} from '@angular/material/icon';
 
 
 @NgModule({
@@ -32,6 +34,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
     BrowserAnimationsModule,
     MatMenuModule,
     MatSidenavModule,
+    MatListModule,
+    MatIconModule,
     MarkdownModule.forRoot()
   ],
   providers: [

@@ -1,13 +1,14 @@
-// const rot42 = require('./app');
+const divide = require('./app');
 
-test('Ciphers the whole alphabet to ROT42, equalling "NOPQRSTUVWXYZABCDEFGHIJKLM"', () => {
-  expect(rot42('ABCDEFGHIJKLMNOPQRSTUVWXYZ')).toBe('QRSTUVWXYZABCDEFGHIJKLMNOP')
-})
-
-test('Ciphers "ABCXYZ" to ROT13, equalling "NOPKLM"', () => {
-  expect(rot42('ABCXYZ')).toBe('QRSNOP')
-})
-
-test('Ciphers "Lorem Ipsum Dolor Sit Amet" to "Yberz Vcfhz Qbybe Fvg Nzrg" on ROT42', () => {
-  expect(rot42('Lorem Ipsum Dolor Sit Amet')).toBe('Behuc Yfikc Tebeh Iyj Qcuj')
-})
+test('divide 4 / 4 to equal 1', () => {
+  expect(divide(4, 4)).toBe(1);
+});
+test('divide 6 / 2 to equal 3', () => {
+  expect(divide(6, 2)).toBe(3);
+});
+test('divide 3 / -1 to equal -3', () => {
+  expect(divide(3, -1)).toBe(-3);
+});
+test('divide 42 / 0 to equal Infinity', () => {
+  expect(divide(42, 0)).toBe(Infinity);
+});

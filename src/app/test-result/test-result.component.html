@@ -9,11 +9,11 @@
 
     <div class="tests flex flex-direction-row flex-wrap-wrap">
         <div *ngFor="let test of result.testResults[0].assertionResults; index as i">
-            <div class="test-item">
+            <div class="test-item" [ngClass]="{'passed': test.status === 'passed', 
+            'failed': test.status === 'failed'}">
                 <div class="flex flex-direction-row">
                     <!-- <span [ngClass]="{'passed' : test.status}">•</span> -->
-                    <div class="status-dot" [ngClass]="{'passed': test.status === 'passed', 
-                'failed': test.status === 'failed'}">•</div>
+                    <div class="status-dot">•</div>
                     <div class="flex align-items-center test-label">Test {{i + 1}}</div>
                 </div>
                 <!-- <div>Name: {{test.fullName}}</div>

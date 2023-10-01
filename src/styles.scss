@@ -43,13 +43,18 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-
-.code pre {
+pre {
     margin: 0 !important;
     border-radius: 0 !important;
+}
+
+.code pre {
     height: 100%;
 }
 
+.problem pre {
+    font-size: .8em !important;
+}
 
 
 
@@ -58,8 +63,9 @@ body {
     // position: relative;
     width: 30px;
     height: 30px;
-  }
-  .lds-ring div {
+}
+
+.lds-ring div {
     box-sizing: border-box;
     display: block;
     position: absolute;
@@ -70,22 +76,26 @@ body {
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color: #5c5c5c transparent transparent transparent;
-  }
-  .lds-ring div:nth-child(1) {
+}
+
+.lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
-  }
-  .lds-ring div:nth-child(2) {
+}
+
+.lds-ring div:nth-child(2) {
     animation-delay: -0.3s;
-  }
-  .lds-ring div:nth-child(3) {
+}
+
+.lds-ring div:nth-child(3) {
     animation-delay: -0.15s;
-  }
-  @keyframes lds-ring {
+}
+
+@keyframes lds-ring {
     0% {
-      transform: rotate(0deg);
+        transform: rotate(0deg);
     }
+
     100% {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
-  
+}

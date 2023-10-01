@@ -1,3 +1,6 @@
 {
-    "name": "ROT42"
+    "name": "Division",
+    "function": {
+        "name": "divide"
+    }
 }

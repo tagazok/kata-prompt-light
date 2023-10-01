@@ -1,14 +1,14 @@
-const sum = require('./app');
+const pal = require('./app');
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
-test('adds 2 + 2 to equal 4', () => {
-  expect(sum(2, 2)).toBe(4);
-});
-test('adds 1 + -2 to equal -1', () => {
-  expect(sum(1, -2)).toBe(-1);
-});
-test('adds 0 + 1 to equal 1', () => {
-  expect(sum(0, 1)).toBe(1);
-});
+test('madam is a palindrome"', () => {
+  expect(pal('madam')).toBe(true)
+})
+
+test('12/21/33 12:21 is a palindrome"', () => {
+  expect(pal('12/21/33 12:21')).toBe(true)
+})
+
+test('coucou is not a palindrome"', () => {
+  expect(pal('coucou')).toBe(false)
+})
+

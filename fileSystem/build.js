@@ -36,16 +36,17 @@ async function generateChallenges() {
             const test = await fs.readFile(`./files/challenges/${language}/${challenge}/test.${languageToExtension[language]}`, { encoding: 'utf8' });
 
             let challengeDescription = "";
-            let challengeData = "";
-
+            let challengeData = "{}";
+            let data = {}
             try {
                 challengeDescription = await fs.readFile(`./files/challenges/${language}/${challenge}/challenge.txt`, { encoding: 'utf8' });
 
                 challengeData = await fs.readFile(`./files/challenges/${language}/${challenge}/data.json`, { encoding: 'utf8' });
 
-                console.log(challengeDescription);
+            
+                // console.log(challengeDescription);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
             }
 
             const filename = `test.${languageToExtension[language]}`;
@@ -53,7 +54,7 @@ async function generateChallenges() {
                 directory: {
                     [filename]: { file: {contents: `${test}`} },
                     "challenge.txt": { file: { contents: `${challengeDescription}`}},
-                    "data.json": { file: { contents: `${challengeData}`}},
+                    "data.json": { file: { contents: challengeData}},
                 }
             };
         }

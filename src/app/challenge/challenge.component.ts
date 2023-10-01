@@ -5,7 +5,9 @@ import { WebContainer } from '@webcontainer/api';
 import { files } from './files';
 import { BedrockService } from '../bedrock.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
+
 
 @Component({
   selector: 'app-challenge',
@@ -15,6 +17,7 @@ import { ActivatedRoute } from '@angular/router';
 export class ChallengeComponent implements OnInit, AfterViewInit {
   @ViewChild('terminal') terminalEl?: ElementRef;
   @ViewChild('promptInput') promptInput: any;
+  @ViewChild('challengesListDrawer') challengesListDrawer?:MatSidenav;
 
   initialPromptInputHeight: number = 0;
   numberofLinesInPromptInput: Array<number> = [0,1];
@@ -23,15 +26,16 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   terminal: Terminal;
   tests: any;
   proposedCode: string;
-  loadinActivities: Set<string>;
+  loadinActivities: Set<string> = new Set();
 
   currentLanguage = "javascript";
   currentChallenge = "001";
   jsonResult = {};
   challengeDescription = "";
   challengeData: any = {};
-
+  challenges: any;
   availableLanguages = ['javascript', 'python'];
+  challengesData: any = {};
 
   newMessageFormGroup = new UntypedFormGroup({
     promptFormControl: new UntypedFormControl('', [Validators.required])
@@ -39,11 +43,23 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
 
   currentChallengePath: any;
 
+  issues: any = {
+    1: {
+      1:{id: 1,title: "one"},
+      3:{id: 3,title: "three"},
+    },
+    3: {
+      4:{id: 4,title: "four"},
+      5:{id: 5,title: "five"},
+    }
+  };
+
   // terminalEl: any;
   constructor(
     private bedrockService: BedrockService,
     private zone: NgZone,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {
     this.updateCurrentChallengePath();
     this.proposedCode = "";
@@ -51,15 +67,35 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     this.terminal = new Terminal({
       convertEol: true,
     });
+    this.buildChallengeData();
+  }
 
+  buildChallengeData() {
+    for (const key in files[this.currentLanguage].directory) {
+      const element = files[this.currentLanguage].directory[key].directory['data.json']?.file.contents || {};
+
+      this.challengesData[key] = JSON.parse(element);
+    }
+  }
+
+  loadChallenge(challengeId: string) {
+    this.router.navigate(
+      [], 
+      {
+        relativeTo: this.route,
+        queryParams: { challengeId: challengeId },
+        queryParamsHandling: 'merge'
+      });
+      this.challengesListDrawer?.close();
   }
 
   updateCurrentChallengePath() {
-    this.currentChallengePath = files[this.currentLanguage].directory[this.currentChallenge].directory;
+    this.challenges = files;
+    this.currentChallengePath = this.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
 
     console.log();
-    this.challengeData = JSON.parse(this.currentChallengePath['data.json']?.file?.contents || {});
+    this.challengeData = this.challengesData[this.currentChallenge]
     this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
   }
 
@@ -77,6 +113,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
         this.updateCurrentChallengePath();
       }
     );
+    this.init();
   }
 
   ngAfterViewInit() {
@@ -86,7 +123,6 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
       this.terminal.open(this.terminalEl.nativeElement);
     }
 
-    this.init();
   }
 
   addLoading(operation: string) {
@@ -142,13 +178,11 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     `
 
     // Write a function in JavaScript called "sum" that takes 2 parameters and returns their sum
-    input += this.newMessageFormGroup.value.promptFormControl || `Write a function in ${this.currentLanguage} called 'sum' that takes 2 parameters and returns their sum`;
+    input += this.newMessageFormGroup.value.promptFormControl;
     const prompt = `
     ${input}
       In your reponse, put the code of the function between the <lc-code></lc-code> xml tags
     `;
-
-    // TODO: Add the export myself
 
     return prompt;
   }
@@ -160,24 +194,32 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
 
     const regex = /<lc-code>(.*?)<\/lc-code>/s;
     try {
-      const code = bedrockResponse.completion.match(regex)[1];
+      let code = bedrockResponse.completion.match(regex)[1];
+      this.proposedCode = code;
+
+
+      code += `
+module.exports = ${this.challengeData.function.name};
+      `;
       console.log(code);
       // this.zone.run(() => {
-      this.proposedCode = code;
-      this.currentChallengePath['app.js'] = {
-        file: {
-          contents: code
-        }
-      }
-      await this.webcontainerInstance.mount(files);
-      // await this.webcontainerInstance.fs.writeFile(this.currentChallengePath['app.js'].file.contents, code);
+      
+      // this.currentChallengePath['app.js'] = {
+      //   file: {
+      //     contents: code
+      //   }
+      // }
+      // await this.webcontainerInstance.mount(files);
+
+      const path = `/${this.currentLanguage}/${this.currentChallenge}/app.js`
+      await this.webcontainerInstance.fs.writeFile(path, code);
 
       // });
     } catch (error) {
       // this.proposedCode = error;
       console.log(error);
     } finally {
-      // console.log(files['app.js']);
+      // console.log(this.challenges['app.js']);
 
     this.removeLoading("Generating code");
     }

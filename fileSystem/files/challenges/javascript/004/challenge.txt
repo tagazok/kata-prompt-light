@@ -1,1 +1,11 @@
-Lorem ipsum dolor, sit amet consectetur adipisicing elit. Enim porro atque temporibus quasi mollitia laborum eaque, quo exercitationem, ut itaque rerum optio fuga illum, labore consequatur totam facere magnam consequuntur.
+**PALINDROME**
+
+A **palindrome** is a word, number, phrase, or other sequence of symbols that reads the same backwards as forwards, such as *madam* or *racecar*, the date and time *12/21/33 12:21*.
+
+Example of function call:
+```javascript
+pal("madam");
+// => true
+```
+
+Source: <a href="https://en.wikipedia.org/wiki/Palindrome" target="_blank">wikipedia</a>
