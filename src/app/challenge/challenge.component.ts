@@ -1,12 +1,15 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Terminal } from 'xterm'
 // import 'xterm/css/xterm.css';
 import { WebContainer } from '@webcontainer/api';
-import { files } from './files';
+import { files } from '../../assets/files';
 import { BedrockService } from '../bedrock.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { BootstrapDialogComponent } from '../bootstrap-dialog/bootstrap-dialog.component';
+import { GameService } from '../game.service';
 
 
 @Component({
@@ -14,7 +17,7 @@ import { MatSidenav } from '@angular/material/sidenav';
   templateUrl: './challenge.component.html',
   styleUrls: ['./challenge.component.scss']
 })
-export class ChallengeComponent implements OnInit, AfterViewInit {
+export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('terminal') terminalEl?: ElementRef;
   @ViewChild('promptInput') promptInput: any;
   @ViewChild('challengesListDrawer') challengesListDrawer?:MatSidenav;
@@ -26,8 +29,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   terminal: Terminal;
   tests: any;
   proposedCode: string;
-  loadinActivities: Set<string> = new Set();
-
+  loadinActivities: Set<string> = new Set("Booting webcontainer");
+  bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
   currentLanguage = "javascript";
   currentChallenge = "001";
   jsonResult = {};
@@ -36,6 +39,12 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   challenges: any;
   availableLanguages = ['javascript', 'python'];
   challengesData: any = {};
+  bootstrapSteps: any = {
+    bootwebcontainer: "radio_button_unchecked",
+    mountwebcontainer: "radio_button_unchecked",
+    installdependancies: "radio_button_unchecked"
+  };
+  timerRef: any;
 
   newMessageFormGroup = new UntypedFormGroup({
     promptFormControl: new UntypedFormControl('', [Validators.required])
@@ -57,17 +66,19 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   // terminalEl: any;
   constructor(
     private bedrockService: BedrockService,
-    private zone: NgZone,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private game: GameService,
+    public dialog: MatDialog
   ) {
-    this.updateCurrentChallengePath();
+    this.updateCurrentChallenge();
     this.proposedCode = "";
     this.loadinActivities = new Set();
     this.terminal = new Terminal({
       convertEol: true,
     });
     this.buildChallengeData();
+    this.bootstrap();
   }
 
   buildChallengeData() {
@@ -89,14 +100,18 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
       this.challengesListDrawer?.close();
   }
 
-  updateCurrentChallengePath() {
+  updateCurrentChallenge() {
     this.challenges = files;
     this.currentChallengePath = this.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
 
-    console.log();
     this.challengeData = this.challengesData[this.currentChallenge]
     this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
+
+    this.proposedCode = "";
+    this.newMessageFormGroup.reset();
+    this.jsonResult = {};
+    this.numberofLinesInPromptInput = [0,1];
   }
 
   ngOnInit() {
@@ -110,12 +125,19 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
         if (params['challengeId']) {
           this.currentChallenge = params['challengeId'];
         }
-        this.updateCurrentChallengePath();
+        this.updateCurrentChallenge();
       }
     );
-    this.init();
+    // this.init();
+    this.initGame();
+    
   }
 
+  async initGame() {
+    this.game.newGame("Olivier");
+    await this.game.initContainer(this.terminal);
+    this.bootstrapDialog?.close();  
+  }
   ngAfterViewInit() {
     this.initialPromptInputHeight = this.promptInput.nativeElement.scrollHeight;
 
@@ -132,44 +154,53 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   removeLoading(operation: string) {
     this.loadinActivities.delete(operation);
   }
-  async init() {
+  // async init() {
 
-    // Call only once
-    this.addLoading("Booting webcontainer");
-    this.webcontainerInstance = await WebContainer.boot();
-    this.removeLoading("Booting webcontainer");
+  //   // Call only once
+  //   debugger;
+  //   this.addLoading("Booting webcontainer");
+  //   this.bootstrapSteps.bootwebcontainer = "sync";
+  //   this.webcontainerInstance = await WebContainer.boot();
+  //   this.removeLoading("Booting webcontainer");
+  //   this.bootstrapSteps.bootwebcontainer = "check_circle";
 
-    console.log(files);
-    this.addLoading("Mounting webcontaine");
-    await this.webcontainerInstance.mount(files);
-    this.removeLoading("Mounting webcontaine");
-    this.startShell();
+  //   console.log(files);
+  //   this.addLoading("Mounting webcontainer");
+  //   this.bootstrapSteps.mountwebcontainer = "sync";
+  //   await this.webcontainerInstance.mount(files);
+  //   this.removeLoading("Mounting webcontainer");
 
-    this.addLoading("Installing dependancies");
-    const exitCode = await this.installDependencies(this.terminal);
-    if (exitCode !== 0) {
-      throw new Error('Installation failed');
-    } else {
-      this.environmentReady = true;
-    };
-    this.removeLoading("Installing dependancies");
-  }
+  //   this.startShell();
+  //   this.bootstrapSteps.mountwebcontainer = "check_circle";
+
+  //   this.bootstrapSteps.installdependancies = "sync";
+  //   this.addLoading("Installing dependancies");
+  //   const exitCode = await this.installDependencies(this.terminal);
+  //   if (exitCode !== 0) {
+  //     throw new Error('Installation failed');
+  //   } else {
+  //     this.environmentReady = true;
+  //   };
+  //   this.removeLoading("Installing dependancies");
+  //   this.bootstrapSteps.installdependancies = "check_circle";
+  //   this.bootstrapDialog?.close();
+  // }
 
 
-  async installDependencies(terminal: Terminal) {
-    // Install dependencies
-    const installProcess = await this.webcontainerInstance.spawn('npm', ['install']);
+  // async installDependencies(terminal: Terminal) {
+  //   // Install dependencies
+  //   const installProcess = await this.webcontainerInstance.spawn('npm', ['install']);
 
-    installProcess.output.pipeTo(new WritableStream({
-      write(data) {
-        terminal.write(data);
-        // console.log(data);
-      }
-    }));
+  //   installProcess.output.pipeTo(new WritableStream({
+  //     write(data) {
+  //       terminal.write(data);
+  //       // console.log(data);
+  //     }
+  //   }));
 
-    // Wait for install command to exit
-    return installProcess.exit;
-  }
+  //   // Wait for install command to exit
+  //   return installProcess.exit;
+  // }
 
   generatePrompt() {
 
@@ -256,24 +287,24 @@ module.exports = ${this.challengeData.function.name};
 
 
 
-  async startShell() {
-    const t = this.terminal
-    const shellProcess = await this.webcontainerInstance.spawn('jsh');
-    shellProcess.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          t.write(data);
-        },
-      })
-    );
+  // async startShell() {
+  //   const t = this.terminal
+  //   const shellProcess = await this.webcontainerInstance.spawn('jsh');
+  //   shellProcess.output.pipeTo(
+  //     new WritableStream({
+  //       write(data) {
+  //         t.write(data);
+  //       },
+  //     })
+  //   );
 
-    const input = shellProcess.input.getWriter();
-    t.onData((data) => {
-      input.write(data);
-    });
+  //   const input = shellProcess.input.getWriter();
+  //   t.onData((data) => {
+  //     input.write(data);
+  //   });
 
-    return shellProcess;
-  };
+  //   return shellProcess;
+  // };
 
   onInputInput(e: any) {
     this.promptInput.nativeElement.style.height = `${this.initialPromptInputHeight}px`;
@@ -281,5 +312,17 @@ module.exports = ${this.challengeData.function.name};
     const nbLines = Math.round(this.promptInput.nativeElement.scrollHeight / 18 );
 
     this.numberofLinesInPromptInput = Array(nbLines).fill(0).map((x,i)=>i);
+  }
+
+  bootstrap() {
+    this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
+      data: {
+        bootstrapSteps: this.game.bootstrapSteps
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.timerRef);
   }
 }

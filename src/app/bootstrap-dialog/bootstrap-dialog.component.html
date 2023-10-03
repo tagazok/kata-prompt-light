@@ -1,0 +1,32 @@
+<div class="padding-3 container">
+    <div class="scene">
+        <div class="cube-wrapper">
+          <div class="cube">
+            <div class="cube-faces">
+              <div class="cube-face shadow"></div>
+              <div class="cube-face bottom"></div>
+              <div class="cube-face top"></div>
+              <div class="cube-face left"></div>
+              <div class="cube-face right"></div>
+              <div class="cube-face back"></div>
+              <div class="cube-face front"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="title margin-bottom-2">Ready to play?</div>
+    <div class="steps">
+        <div class="step flex flex-direction-row" [ngClass]="data.bootstrapSteps.bootwebcontainer">
+            <mat-icon inline=true>{{data.bootstrapSteps.bootwebcontainer}}</mat-icon>
+            <div class="flex align-items-center">Booting WebContainer</div>
+        </div>
+        <div class="step flex flex-direction-row"  [ngClass]="data.bootstrapSteps.mountwebcontainer">
+            <mat-icon inline=true>{{data.bootstrapSteps.mountwebcontainer}}</mat-icon>
+            <div class="flex align-items-center">Mounting WebContainer</div>
+        </div>
+        <div class="step flex flex-direction-row"  [ngClass]="data.bootstrapSteps.installdependancies">
+            <mat-icon inline=true>{{data.bootstrapSteps.installdependancies}}</mat-icon>
+            <div class="flex align-items-center">Installing Dependencies</div>
+        </div>
+    </div>
+</div>

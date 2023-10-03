@@ -7,8 +7,33 @@ import { Component, Input } from '@angular/core';
 })
 export class TestResultComponent {
   @Input() result: any;
+  // @Input() rawTests: any = "";
+  tests: any = [];
+  private rTests = "";
 
-  constructor() {
+  @Input() set rawTests(value: any) {
     
+    this.rTests = value;
+    this.getTestInputsAndOutputs();
+ 
+ }
+
+  
+  constructor() {
+    // this.getTestInputsAndOutputs();
   }
+
+  getTestInputsAndOutputs() {
+    const regex = /test\('.*?', \(\) => {\s+expect\(.*\('(.+?)'\)\).toBe\((true|false)\)\s+}\)/g;
+    const matches = [...this.rTests.matchAll(regex)];
+    
+    const jsonArray = matches.map(match => ({
+      input: match[1],
+      output: match[2] === 'true'
+    }));
+
+    this.tests = jsonArray;
+  }
+
+
 }

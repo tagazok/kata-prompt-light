@@ -7,18 +7,22 @@
 
     <div class="test-ratio-pass margin-bottom-1">{{+result.numPassedTests}} tests out of {{+result.numTotalTests}} passed.</div>
 
-    <div class="tests flex flex-direction-row flex-wrap-wrap">
-        <div *ngFor="let test of result.testResults[0].assertionResults; index as i">
+    <div class="tests flex flex-direction-row flex-wrap-wrap align-items-center">
+        <div *ngFor="let test of result.testResults[0].assertionResults; index as i" (click)="selectedTest = tests[i]">
             <div class="test-item" [ngClass]="{'passed': test.status === 'passed', 
             'failed': test.status === 'failed'}">
                 <div class="flex flex-direction-row">
-                    <!-- <span [ngClass]="{'passed' : test.status}">•</span> -->
                     <div class="status-dot">•</div>
                     <div class="flex align-items-center test-label">Test {{i + 1}}</div>
                 </div>
-                <!-- <div>Name: {{test.fullName}}</div>
-            <div>Duration: {{test.duration}}ms</div> -->
             </div>
         </div>
+    </div>
+    <div class="test-details" *ngIf="selectedTest">
+        <div class="label">Input:</div>
+        <div class="raw-data">{{selectedTest.input}}</div>
+        <div class="label">Expected output:</div>
+        <div class="raw-data">{{selectedTest.output}}</div>
+        <!-- <pre>{{selectedTest |json}}</pre> -->
     </div>
 </div>

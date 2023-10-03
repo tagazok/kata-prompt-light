@@ -16,13 +16,15 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { BootstrapDialogComponent } from './bootstrap-dialog/bootstrap-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChallengeComponent,
-    TestResultComponent
+    TestResultComponent,
+    BootstrapDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +38,7 @@ import {MatIconModule} from '@angular/material/icon';
     MatSidenavModule,
     MatListModule,
     MatIconModule,
+    MatDialogModule,
     MarkdownModule.forRoot()
   ],
   providers: [

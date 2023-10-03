@@ -56,6 +56,9 @@
                         </div>
                     </mat-menu>
                 </div>
+                <div class="flex align-items-center">
+                    <button mat-flat-button color="primary">New game!</button>
+                </div>
             </div>
         </div>
 
@@ -79,7 +82,7 @@
                             <div class="body flex no-padding overflow-hidden">
                                 <mat-tab-group animationDuration="0ms">
                                     <mat-tab label="Results">
-                                        <app-test-result [result]="jsonResult"></app-test-result>
+                                        <app-test-result [result]="jsonResult" [rawTests]="this.currentChallengePath['test.js'].file.contents"></app-test-result>
                                     </mat-tab>
                                     <mat-tab label="Tests">
                                         <div class="code" [innerHTML]="tests | language : 'javascript' | markdown">
