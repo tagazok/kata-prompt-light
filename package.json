@@ -23,6 +23,7 @@
     "@aws-sdk/client-cognito-identity": "^3.397.0",
     "@aws-sdk/client-sts": "^3.395.0",
     "@webcontainer/api": "^1.1.5",
+    "aws-amplify": "^5.3.11",
     "aws4fetch": "^1.0.17",
     "marked": "^4.3.0",
     "mermaid": "^10.4.0",

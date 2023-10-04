@@ -1,0 +1,21 @@
+.container {
+    // background-color: #272822;
+    // color: #fff;
+
+    background-color: var(--bloc-content-bg-color);
+    color: var(--main-text-color);
+
+    .title {
+        text-align: center;
+    }
+
+    input {
+        color: #fff;
+        color: var(--main-text-color);
+        text-align: center;
+
+        &::placeholder {
+            color: #9d9d9d;
+        }
+    }
+}

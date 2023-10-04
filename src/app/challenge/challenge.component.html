@@ -22,9 +22,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="nav">
-            <!-- <div class="title"></div> -->
             <div class="flex flex-direction-row justify-content-space-between">
-                <!-- <div class="language">{{currentLanguage}}</div> -->
                 <div class="flex align-items-center">
                     <button type="button" matSuffix mat-icon-button aria-label="Show list of challents"
                         (click)="challengesListDrawer.toggle()">
@@ -43,9 +41,9 @@
                             <div></div>
                             <div></div>
                         </div>
-                        <div *ngIf="loadinActivities.size === 0" class="flex align-items-center">
+                        <!-- <div *ngIf="loadinActivities.size === 0" class="flex align-items-center">
                             <mat-icon aria-label="Check icon" fontIcon="check"></mat-icon>
-                        </div>
+                        </div> -->
                     </button>
                     <mat-menu #menu="matMenu" class="padding-left-1 padding-right-1">
                         <div *ngFor="let activity of loadinActivities">
@@ -55,9 +53,15 @@
                             Resting... 😴
                         </div>
                     </mat-menu>
-                </div>
-                <div class="flex align-items-center">
-                    <button mat-flat-button color="primary">New game!</button>
+                    <div *ngIf="game.game?.user" class="padding-right-1">
+                        Go {{game.game?.user}}! ({{game.game.score}} points)
+                    </div>
+                    <div class="flex align-items-center">
+                        <button mat-flat-button color="primary" (click)="newGame()">New game!</button>
+                    </div>
+                    <button mat-icon-button color="accent" (click)="showRules()">
+                        <mat-icon aria-label="Help icon" fontIcon="help_center"></mat-icon>
+                    </button>
                 </div>
             </div>
         </div>

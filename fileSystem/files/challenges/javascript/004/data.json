@@ -2,5 +2,12 @@
     "name": "Palindrome",
     "function": {
         "name": "pal"
+    },
+    "tests": {
+        "madam is a palindrome": 1,
+        "coucou is not a palindrome": 1,
+        "12/21/33 12:21 is a palindrome": 2
     }
 }
+
+// TODO: Ajouter coeficient multiplicateur par rapport au temps.

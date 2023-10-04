@@ -1,6 +1,6 @@
 const pal = require('./app');
 
-test('madam is a palindrome"', () => {
+test('madam is a palindrome', () => {
   expect(pal('madam')).toBe(true)
 })
 

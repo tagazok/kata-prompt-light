@@ -1,0 +1,34 @@
+# this is an auto generated file. This will be overwritten
+
+subscription OnCreateGame($filter: ModelSubscriptionGameFilterInput) {
+  onCreateGame(filter: $filter) {
+    id
+    user
+    score
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnUpdateGame($filter: ModelSubscriptionGameFilterInput) {
+  onUpdateGame(filter: $filter) {
+    id
+    user
+    score
+    createdAt
+    updatedAt
+    __typename
+  }
+}
+
+subscription OnDeleteGame($filter: ModelSubscriptionGameFilterInput) {
+  onDeleteGame(filter: $filter) {
+    id
+    user
+    score
+    createdAt
+    updatedAt
+    __typename
+  }
+}

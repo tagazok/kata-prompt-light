@@ -18,13 +18,20 @@ import { MatListModule } from '@angular/material/list';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BootstrapDialogComponent } from './bootstrap-dialog/bootstrap-dialog.component';
+import { NewGameDialogComponent } from './new-game-dialog/new-game-dialog.component';
+import {MatInputModule} from '@angular/material/input';
+import { RulesComponent } from './rules/rules.component';
+import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ChallengeComponent,
     TestResultComponent,
-    BootstrapDialogComponent
+    BootstrapDialogComponent,
+    NewGameDialogComponent,
+    RulesComponent,
+    RulesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +46,7 @@ import { BootstrapDialogComponent } from './bootstrap-dialog/bootstrap-dialog.co
     MatListModule,
     MatIconModule,
     MatDialogModule,
+    MatInputModule,
     MarkdownModule.forRoot()
   ],
   providers: [

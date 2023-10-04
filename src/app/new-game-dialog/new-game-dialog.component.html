@@ -1,0 +1,12 @@
+<div class="padding-3 container flex flex-direction-column">
+
+    <div class="title margin-bottom-2">NEW GAME</div>
+    <form id="new-message-form" [formGroup]="newGameFormGroup">
+        <mat-form-field appearance="outline">
+            <input matInput placeholder="What is your name?" formControlName="userNameFormControl">
+        </mat-form-field>
+        <div class="flex justify-content-center">
+            <button mat-flat-button color="primary" (click)="newGame()">PLAY</button>
+        </div>
+    </form>
+</div>
