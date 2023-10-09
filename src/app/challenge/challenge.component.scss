@@ -72,6 +72,7 @@ mat-sidenav-content {
             .body {
                 overflow: hidden;
                 padding: 1em;
+                position: relative;
             }
 
             .body:has(.terminal) {
@@ -223,5 +224,15 @@ mat-sidenav {
     .challenges {
         flex: 1;
         overflow-y: auto;
+
+        mat-icon {
+            color: green;
+        }
     }
+}
+
+app-loading-cube {
+    height: 100%;
+    width: 100%;
+    position: absolute;
 }

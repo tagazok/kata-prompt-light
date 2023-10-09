@@ -22,6 +22,8 @@ import { NewGameDialogComponent } from './new-game-dialog/new-game-dialog.compon
 import {MatInputModule} from '@angular/material/input';
 import { RulesComponent } from './rules/rules.component';
 import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
+import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
+import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
     BootstrapDialogComponent,
     NewGameDialogComponent,
     RulesComponent,
-    RulesDialogComponent
+    RulesDialogComponent,
+    ScoreDialogComponent,
+    LoadingCubeComponent
   ],
   imports: [
     BrowserModule,

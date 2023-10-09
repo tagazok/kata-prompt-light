@@ -3,11 +3,10 @@
     "function": {
         "name": "pal"
     },
+    "completionPoints": 60, 
     "tests": {
-        "madam is a palindrome": 1,
-        "coucou is not a palindrome": 1,
-        "12/21/33 12:21 is a palindrome": 2
+        "madam is a palindrome": 20,
+        "coucou is not a palindrome": 20,
+        "12/21/33 12:21 is a palindrome": 40 
     }
 }
-
-// TODO: Ajouter coeficient multiplicateur par rapport au temps.

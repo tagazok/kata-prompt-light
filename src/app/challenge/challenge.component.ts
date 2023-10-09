@@ -13,6 +13,7 @@ import { GameService } from '../game.service';
 import { NewGameDialogComponent } from '../new-game-dialog/new-game-dialog.component';
 import { Subscription, timer } from 'rxjs';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
+import { ScoreDialogComponent } from '../score-dialog/score-dialog.component';
 
 
 @Component({
@@ -41,7 +42,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   challengeData: any = {};
   challenges: any;
   availableLanguages = ['javascript', 'python'];
-  challengesData: any = {};
+  // challengesData: any = {};
   bootstrapSteps: any = {
     bootwebcontainer: "radio_button_unchecked",
     mountwebcontainer: "radio_button_unchecked",
@@ -80,17 +81,18 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.terminal = new Terminal({
       convertEol: true,
     });
-    this.buildChallengeData();
+    // this.buildChallengeData();
+    // this.game.buildChallengeData();
     this.bootstrap();
   }
 
-  buildChallengeData() {
-    for (const key in files[this.currentLanguage].directory) {
-      const element = files[this.currentLanguage].directory[key].directory['data.json']?.file.contents || {};
+  // buildChallengeData() {
+  //   for (const key in files[this.currentLanguage].directory) {
+  //     const element = files[this.currentLanguage].directory[key].directory['data.json']?.file.contents || {};
 
-      this.challengesData[key] = JSON.parse(element);
-    }
-  }
+  //     this.challengesData[key] = JSON.parse(element);
+  //   }
+  // }
 
   loadChallenge(challengeId: string) {
     this.router.navigate(
@@ -104,11 +106,10 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateCurrentChallenge() {
-    this.challenges = files;
-    this.currentChallengePath = this.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
+    this.currentChallengePath = this.game.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
 
-    this.challengeData = this.challengesData[this.currentChallenge]
+    this.challengeData = this.game.challengesData[this.currentChallenge]
     this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
 
     this.proposedCode = "";
@@ -116,7 +117,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.jsonResult = {};
     this.numberofLinesInPromptInput = [0, 1];
 
-    this.startTimer();
+    // this.startTimer();
+    this.game.startChallenge();
   }
 
   ngOnInit() {
@@ -138,14 +140,14 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  startTimer() {
-    clearInterval(this.timerRef);
-    this.timerRef = setInterval(() => {
-      if (this.game.game) {
-        this.game.updateScore(1);
-      }
-    }, 1000);
-  }
+  // startTimer() {
+  //   clearInterval(this.timerRef);
+  //   this.timerRef = setInterval(() => {
+  //     if (this.game.game) {
+  //       this.game.updateScore(1);
+  //     }
+  //   }, 1000);
+  // }
 
   async initGame() {
     await this.game.initContainer(this.terminal);
@@ -154,6 +156,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     this.bootstrapDialog?.close();
   }
+
   ngAfterViewInit() {
     this.initialPromptInputHeight = this.promptInput.nativeElement.scrollHeight;
 
@@ -170,53 +173,6 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   removeLoading(operation: string) {
     this.loadinActivities.delete(operation);
   }
-  // async init() {
-
-  //   // Call only once
-  //   debugger;
-  //   this.addLoading("Booting webcontainer");
-  //   this.bootstrapSteps.bootwebcontainer = "sync";
-  //   this.webcontainerInstance = await WebContainer.boot();
-  //   this.removeLoading("Booting webcontainer");
-  //   this.bootstrapSteps.bootwebcontainer = "check_circle";
-
-  //   console.log(files);
-  //   this.addLoading("Mounting webcontainer");
-  //   this.bootstrapSteps.mountwebcontainer = "sync";
-  //   await this.webcontainerInstance.mount(files);
-  //   this.removeLoading("Mounting webcontainer");
-
-  //   this.startShell();
-  //   this.bootstrapSteps.mountwebcontainer = "check_circle";
-
-  //   this.bootstrapSteps.installdependancies = "sync";
-  //   this.addLoading("Installing dependancies");
-  //   const exitCode = await this.installDependencies(this.terminal);
-  //   if (exitCode !== 0) {
-  //     throw new Error('Installation failed');
-  //   } else {
-  //     this.environmentReady = true;
-  //   };
-  //   this.removeLoading("Installing dependancies");
-  //   this.bootstrapSteps.installdependancies = "check_circle";
-  //   this.bootstrapDialog?.close();
-  // }
-
-
-  // async installDependencies(terminal: Terminal) {
-  //   // Install dependencies
-  //   const installProcess = await this.webcontainerInstance.spawn('npm', ['install']);
-
-  //   installProcess.output.pipeTo(new WritableStream({
-  //     write(data) {
-  //       terminal.write(data);
-  //       // console.log(data);
-  //     }
-  //   }));
-
-  //   // Wait for install command to exit
-  //   return installProcess.exit;
-  // }
 
   generatePrompt() {
 
@@ -236,6 +192,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   async generateCode() {
     this.addLoading("Generating code");
+    this.game.stopwatch.pause();
     const bedrockResponse = await this.bedrockService.callClaudeV2(this.generatePrompt());
     console.log(bedrockResponse.completion);
 
@@ -243,7 +200,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       let code = bedrockResponse.completion.match(regex)[1];
       this.proposedCode = code;
-
+      this.game.stopwatch.resume();
 
       code += `
 module.exports = ${this.challengeData.function.name};
@@ -274,24 +231,15 @@ module.exports = ${this.challengeData.function.name};
   }
 
   async runTests(): Promise<any> {
+    this.addLoading("Running tests");
     const jsonResult = await this.game.runTests(this.terminal, this.currentChallenge);
     this.jsonResult = jsonResult;
-    //   const t = this.terminal;
-    //   let th = this;
-    //   // const runTestProcess = await this.webcontainerInstance.spawn('npm', ['run', 'jest']);
-
-    //   const runTestProcess = await this.webcontainerInstance.spawn('jest', [`${this.currentLanguage}/${this.currentChallenge}/test.js`, '--json', '--outputFile', `${this.currentLanguage}/${this.currentChallenge}/result.json`]);
-    //   runTestProcess.output.pipeTo(new WritableStream({
-    //     write(data) {
-    //       t.write(data);
-    //       // this.terminal.write(data);
-    //       console.log(data);
-    //       th.loadResult();
-    //     }
-    //   }));
-
-    //   // Wait for install command to exit
-    //   return runTestProcess.exit;
+    this.removeLoading("Running tests");
+    this.dialog.open(ScoreDialogComponent, {
+      data: {
+        challengeId: this.currentChallenge
+      }
+    });
   }
 
   async loadResult() {
@@ -303,27 +251,6 @@ module.exports = ${this.challengeData.function.name};
 
     }
   }
-
-
-
-  // async startShell() {
-  //   const t = this.terminal
-  //   const shellProcess = await this.webcontainerInstance.spawn('jsh');
-  //   shellProcess.output.pipeTo(
-  //     new WritableStream({
-  //       write(data) {
-  //         t.write(data);
-  //       },
-  //     })
-  //   );
-
-  //   const input = shellProcess.input.getWriter();
-  //   t.onData((data) => {
-  //     input.write(data);
-  //   });
-
-  //   return shellProcess;
-  // };
 
   onInputInput(e: any) {
     this.promptInput.nativeElement.style.height = `${this.initialPromptInputHeight}px`;
@@ -342,7 +269,7 @@ module.exports = ${this.challengeData.function.name};
   }
 
   ngOnDestroy() {
-    clearInterval(this.timerRef);
+    // clearInterval(this.timerRef);
     // this.timerRef.unsubscribe();
   }
 
@@ -351,8 +278,6 @@ module.exports = ${this.challengeData.function.name};
   }
   
   newGame() {
-    // const newGameDialog = this.dialog.open(NewGameDialogComponent, {
-    // });
 
     const rulesGameDialog = this.dialog.open(RulesDialogComponent);
 

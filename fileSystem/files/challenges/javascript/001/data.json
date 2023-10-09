@@ -2,5 +2,12 @@
     "name": "Sum",
     "function": {
         "name": "sum"
+    },
+    "completionPoints": 20,
+    "tests": {
+        "adds 1 + 2 to equal 3": 10,
+        "adds 2 + 2 to equal 4": 10,
+        "adds 1 + -2 to equal -1": 10,
+        "adds 0 + 1 to equal 1": 10
     }
 }

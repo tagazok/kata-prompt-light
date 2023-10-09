@@ -1,0 +1,47 @@
+<div class="padding-1 prompt">
+    <!-- <h1>SCORE</h1> -->
+    <div class="prompt padding-1">
+        <div class="results">
+            <div class="full-width">
+                <pre>
+
+   _____   ______   ____     ____     ______
+  / ___/  / ____/  / __ \   / __ \   / ____/
+  \__ \  / /      / / / /  / /_/ /  / __/   
+ ___/ / / /___   / /_/ /  / _, _/  / /___   
+/____/  \____/   \____/  /_/ |_|  /_____/   
+                                                                                                     
+                </pre>
+            </div>
+            <div class="full-width margin-bottom-1">
+                <span class="shell">[{{game.game.user}}@localhost ~]$</span> ./run-score --challenge
+                {{data.challengeId}}
+            </div>
+
+            <div class="label">Challenge</div>
+            <div class="value">{{this.scoreData.tests}}</div>
+
+            <div class="label">Bonus Time</div>
+            <div class="value">{{this.scoreData.timeBonus}}</div>
+
+            <div class="label">Challenge completion</div>
+            <div class="value">{{this.scoreData.challenge}}</div>
+
+            <div class="margin-bottom-1"></div>
+
+            <div class="label">TOTAL</div>
+            <div class="value">{{this.game.game.score}}</div>
+
+            <div class="margin-bottom-1"></div>
+
+            <div class="full-width">
+                You still have some tests that failed. Try to adjust your prompt.
+            </div>
+            <div class="margin-bottom-1"></div>
+
+            <div class="flex justify-content-center full-width">
+                <button mat-flat-button mat-dialog-close [disabled]="disableClose">CONTINUE</button>
+            </div>
+        </div>
+    </div>
+</div>

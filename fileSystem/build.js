@@ -60,7 +60,6 @@ async function generateChallenges() {
         }
     }
     require('util').inspect.defaultOptions.depth = null;
-   
     return obj;
 }
 
@@ -70,8 +69,7 @@ async function writeFile(text) {
         ${JSON.stringify(text)}
     ;
         `;
-        // console.log(fileContent);
-    fs.writeFile('../src/app/challenge/files.ts', fileContent);
+    fs.writeFile('../src/assets/files.ts', fileContent);
 }
 async function buildFile() {
     

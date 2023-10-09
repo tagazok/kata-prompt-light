@@ -3,6 +3,16 @@ import { WebContainer } from '@webcontainer/api';
 import { files } from '../assets/files';
 import { Terminal } from 'xterm';
 import { APIService, Game } from './API.service';
+import { StopwatchService } from './stopwatch.service';
+
+const referenceTime = 60; // Reference time for the challenge in seconds
+const timeBonusFactor = 0.5; // Time bonus factor (points per second saved)
+
+interface ChallengeTempData {
+  passTests: Set<string>,
+  elapsedTime: number,
+  done: boolean
+};
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +27,19 @@ export class GameService {
     installdependancies: "radio_button_unchecked"
   };
   currentLanguage = "javascript";
+  challengesData: any = {};
 
+  // Store data relatives to 
+  challengesTempData: Record<string, ChallengeTempData> = {};
+
+  // challengesScoreAndTime: any = {}
   constructor(
-    private api: APIService
-  ) { }
+    private api: APIService,
+    public stopwatch: StopwatchService
+  ) {
+    this.buildChallengeData();
+    this.challenges = files;
+  }
 
 
   async newGame(playerName: string) {
@@ -83,7 +102,7 @@ export class GameService {
     const t = terminal;
     let th = this;
     // const runTestProcess = await this.webcontainerInstance.spawn('npm', ['run', 'jest']);
-
+    this.stopwatch.pause();
     const runTestProcess = await this.webcontainerInstance.spawn('jest', [`${this.currentLanguage}/${challengeId}/test.js`, '--json', '--outputFile', `${this.currentLanguage}/${challengeId}/result.json`]);
     runTestProcess.output.pipeTo(new WritableStream({
       write(data) {
@@ -93,10 +112,86 @@ export class GameService {
         th.loadResult(challengeId);
       }
     }));
-
     // Wait for install command to exit
     await runTestProcess.exit;
+    // this.updateScore(challengeId, referenceTime);
     return await this.loadResult(challengeId);
+  }
+
+  async getScore(challengeId: string, bonusPoints = []) {
+    const results = await this.loadResult(challengeId);
+    let score = 0;
+    let challenge = this.challengesData[challengeId].completionPoints
+    for (const test of results.testResults[0].assertionResults) {
+      if (!this.challengesTempData[challengeId]) {
+        this.challengesTempData[challengeId] = {
+          passTests: new Set<string>(),
+          elapsedTime: this.stopwatch.getElapsedTimeInSeconds(),
+          done: false
+        }
+      }
+      if (test.status === 'passed') {
+        if (!this.challengesTempData[challengeId].passTests.has(test.fullName)) {
+          console.log(`${test.fullName} - ${this.challengesData[challengeId].tests[test.fullName]}`);
+          score += this.challengesData[challengeId].tests[test.fullName];
+
+          // Specify that the test has already been ran so we don't count the points several times
+          this.challengesTempData[challengeId].passTests.add(test.fullName);
+        }
+      } else {
+        challenge = 0;
+      }
+    }
+    let timeBonus = 0;
+    if (challenge != 0) {
+      this.challengesTempData[challengeId].done = true;
+      timeBonus = this.calculateTimeBonus(this.stopwatch.getElapsedTimeInSeconds());
+    }
+    
+
+    return {
+      tests: score,
+      timeBonus: Math.round(timeBonus),
+      challenge: challenge,
+      bonusPoints: bonusPoints
+    }
+  }
+  updateScore(inc: number) {
+    // this.game.score += inc;
+  }
+  // async updateScore(challengeId: string, bonusPoints: number = 0) {
+  //   const results = await this.loadResult(challengeId);
+  //   console.log(results);
+  //   console.log(this.challengesData[challengeId].tests);
+  //   let score = 0;
+  //   for (const test of results.testResults[0].assertionResults) {
+  //     if (test.status === 'passed') {
+  //       console.log(`${test.fullName} - ${this.challengesData[challengeId].tests[test.fullName]}`);
+  //       score += this.challengesData[challengeId].tests[test.fullName];
+  //     }
+  //   }
+  //   score += this.calculateTimeBonus(this.stopwatch.getElapsedTimeInSeconds())
+  //   this.game.score += score;
+  //   // TODO: add the passed tests to an array that is savec in dynamoDB
+  // }
+
+  calculateTimeBonus(timerValue: number) {
+    const timeSaved = referenceTime - timerValue;
+    const timeBonus = timeSaved * timeBonusFactor;
+
+    return Math.max(0, timeBonus);
+  }
+
+  buildChallengeData() {
+    for (const key in files[this.currentLanguage].directory) {
+      const element = files[this.currentLanguage].directory[key].directory['data.json']?.file.contents || {};
+
+      this.challengesData[key] = JSON.parse(element);
+    }
+  }
+
+  startChallenge() {
+    this.stopwatch.start();
   }
 
   async loadResult(challengeId: string) {
@@ -132,9 +227,9 @@ export class GameService {
   async saveCode(path: string, code: string) {
     await this.webcontainerInstance.fs.writeFile(path, code);
   }
-  
-  async updateScore(inc: number) {
-    console.log(`${this.game.score} - ${inc}`);
-    this.game.score += inc;
-  }
+
+  // async updateScore(inc: number) {
+  //   console.log(`${this.game.score} - ${inc}`);
+  //   this.game.score += inc;
+  // }
 }
