@@ -11,4 +11,3 @@ test('12/21/33 12:21 is a palindrome', () => {
 test('coucou is not a palindrome', () => {
   expect(pal('coucou')).toBe(false)
 })
-

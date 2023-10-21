@@ -10,6 +10,11 @@
       "StackName": "amplify-promptchallenge-dev-110824",
       "StackId": "arn:aws:cloudformation:eu-west-1:697166389045:stack/amplify-promptchallenge-dev-110824/69f21700-61cc-11ee-8bde-02fb5136bafb",
       "AmplifyAppId": "d1fwkigh1ew4m3"
+    },
+    "categories": {
+      "api": {
+        "promptchallenge": {}
+      }
     }
   }
 }

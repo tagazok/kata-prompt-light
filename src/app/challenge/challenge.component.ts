@@ -14,6 +14,7 @@ import { NewGameDialogComponent } from '../new-game-dialog/new-game-dialog.compo
 import { Subscription, timer } from 'rxjs';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { ScoreDialogComponent } from '../score-dialog/score-dialog.component';
+import { LeaderboardDialogComponent } from '../leaderboard-dialog/leaderboard-dialog.component';
 
 
 @Component({
@@ -30,11 +31,11 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   numberofLinesInPromptInput: Array<number> = [0, 1];
   environmentReady: boolean = false;
   webcontainerInstance: any;
-  terminal: Terminal;
+  // terminal: Terminal;
   tests: any;
   proposedCode: string;
   loadinActivities: Set<string> = new Set("Booting webcontainer");
-  bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
+  // bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
   currentLanguage = "javascript";
   currentChallenge = "001";
   jsonResult = {};
@@ -56,18 +57,6 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
 
   currentChallengePath: any;
 
-  issues: any = {
-    1: {
-      1: { id: 1, title: "one" },
-      3: { id: 3, title: "three" },
-    },
-    3: {
-      4: { id: 4, title: "four" },
-      5: { id: 5, title: "five" },
-    }
-  };
-
-  // terminalEl: any;
   constructor(
     private bedrockService: BedrockService,
     private route: ActivatedRoute,
@@ -75,14 +64,11 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     public game: GameService,
     public dialog: MatDialog
   ) {
-    // this.updateCurrentChallenge();
     this.proposedCode = "";
     this.loadinActivities = new Set();
-    this.terminal = new Terminal({
-      convertEol: true,
-    });
-    // this.buildChallengeData();
-    // this.game.buildChallengeData();
+    // this.terminal = new Terminal({
+    //   convertEol: true,
+    // });
     this.bootstrap();
   }
 
@@ -94,18 +80,21 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   //   }
   // }
 
-  loadChallenge(challengeId: string) {
-    this.router.navigate(
-      [],
-      {
-        relativeTo: this.route,
-        queryParams: { challengeId: challengeId },
-        queryParamsHandling: 'merge'
-      });
-    this.challengesListDrawer?.close();
-  }
+  // loadChallenge(challengeId: string) {
+  //   this.router.navigate(
+  //     [],
+  //     {
+  //       relativeTo: this.route,
+  //       queryParams: { challengeId: challengeId },
+  //       queryParamsHandling: 'merge'
+  //     });
+  //   this.challengesListDrawer?.close();
+  // }
 
   updateCurrentChallenge() {
+    console.log(this.game.challenges);
+    console.log(this.currentChallenge);
+    console.log(this.game.challenges[this.currentLanguage]);
     this.currentChallengePath = this.game.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
 
@@ -117,51 +106,52 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
     this.jsonResult = {};
     this.numberofLinesInPromptInput = [0, 1];
 
-    // this.startTimer();
     this.game.startChallenge();
   }
 
   ngOnInit() {
-    this.route.queryParams
-      .subscribe(params => {
-        console.log(params);
-        if (params['language'] && this.availableLanguages.includes(params['language'])) {
-          this.currentLanguage = params['language'];
-        }
 
-        if (params['challengeId']) {
-          this.currentChallenge = params['challengeId'];
-        }
-        this.updateCurrentChallenge();
-      }
-      );
+    this.route.params.subscribe(routeParams => {
+      this.currentChallenge = routeParams['challengeId'] || "";
+      this.updateCurrentChallenge();
+    });
+    
+    
+
+    // this.route.queryParams
+    //   .subscribe(params => {
+    //     console.log(params);
+    //     if (params['language'] && this.availableLanguages.includes(params['language'])) {
+    //       this.currentLanguage = params['language'];
+    //     }
+
+    //     if (params['challengeId']) {
+    //       this.currentChallenge = params['challengeId'];
+    //     }
+    //     this.updateCurrentChallenge();
+    //   }
+    //   );
     // this.init();
     this.initGame();
 
   }
 
-  // startTimer() {
-  //   clearInterval(this.timerRef);
-  //   this.timerRef = setInterval(() => {
-  //     if (this.game.game) {
-  //       this.game.updateScore(1);
-  //     }
-  //   }, 1000);
-  // }
 
   async initGame() {
-    await this.game.initContainer(this.terminal);
+    // await this.game.initContainer();
     if (!this.game.game) {
       this.newGame();
     };
-    this.bootstrapDialog?.close();
+    // this.bootstrapDialog?.close();
   }
 
   ngAfterViewInit() {
     this.initialPromptInputHeight = this.promptInput.nativeElement.scrollHeight;
 
     if (this.terminalEl) {
-      this.terminal.open(this.terminalEl.nativeElement);
+      // this.terminal.open(this.terminalEl.nativeElement);
+      this.game.startShell();
+      this.game.terminal.open(this.terminalEl.nativeElement);
     }
 
   }
@@ -232,7 +222,7 @@ module.exports = ${this.challengeData.function.name};
 
   async runTests(): Promise<any> {
     this.addLoading("Running tests");
-    const jsonResult = await this.game.runTests(this.terminal, this.currentChallenge);
+    const jsonResult = await this.game.runTests(this.currentChallenge);
     this.jsonResult = jsonResult;
     this.removeLoading("Running tests");
     this.dialog.open(ScoreDialogComponent, {
@@ -261,11 +251,11 @@ module.exports = ${this.challengeData.function.name};
   }
 
   bootstrap() {
-    this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
-      data: {
-        bootstrapSteps: this.game.bootstrapSteps
-      }
-    });
+    // this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
+    //   data: {
+    //     bootstrapSteps: this.game.bootstrapSteps
+    //   }
+    // });
   }
 
   ngOnDestroy() {
@@ -284,5 +274,9 @@ module.exports = ${this.challengeData.function.name};
     rulesGameDialog.afterClosed().subscribe(result => {
       this.dialog.open(NewGameDialogComponent);
     });
+  }
+
+  openLeaderBoardDialog() {
+    this.dialog.open(LeaderboardDialogComponent);
   }
 }

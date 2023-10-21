@@ -29,3 +29,30 @@ query ListGames(
     __typename
   }
 }
+
+query GamesByUser(
+  $user: String!
+  $sortDirection: ModelSortDirection
+  $filter: ModelGameFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  gamesByUser(
+    user: $user
+    sortDirection: $sortDirection
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      user
+      score
+      createdAt
+      updatedAt
+      __typename
+    }
+    nextToken
+    __typename
+  }
+}

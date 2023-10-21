@@ -130,6 +130,11 @@ export type ModelGameConnection = {
   nextToken?: string | null;
 };
 
+export enum ModelSortDirection {
+  ASC = "ASC",
+  DESC = "DESC"
+}
+
 export type ModelSubscriptionGameFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   user?: ModelSubscriptionStringInput | null;
@@ -217,6 +222,19 @@ export type GetGameQuery = {
 };
 
 export type ListGamesQuery = {
+  __typename: "ModelGameConnection";
+  items: Array<{
+    __typename: "Game";
+    id: string;
+    user: string;
+    score: number;
+    createdAt: string;
+    updatedAt: string;
+  } | null>;
+  nextToken?: string | null;
+};
+
+export type GamesByUserQuery = {
   __typename: "ModelGameConnection";
   items: Array<{
     __typename: "Game";
@@ -387,6 +405,53 @@ export class APIService {
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
     return <ListGamesQuery>response.data.listGames;
+  }
+  async GamesByUser(
+    user: string,
+    sortDirection?: ModelSortDirection,
+    filter?: ModelGameFilterInput,
+    limit?: number,
+    nextToken?: string
+  ): Promise<GamesByUserQuery> {
+    const statement = `query GamesByUser($user: String!, $sortDirection: ModelSortDirection, $filter: ModelGameFilterInput, $limit: Int, $nextToken: String) {
+        gamesByUser(
+          user: $user
+          sortDirection: $sortDirection
+          filter: $filter
+          limit: $limit
+          nextToken: $nextToken
+        ) {
+          __typename
+          items {
+            __typename
+            id
+            user
+            score
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+      }`;
+    const gqlAPIServiceArguments: any = {
+      user
+    };
+    if (sortDirection) {
+      gqlAPIServiceArguments.sortDirection = sortDirection;
+    }
+    if (filter) {
+      gqlAPIServiceArguments.filter = filter;
+    }
+    if (limit) {
+      gqlAPIServiceArguments.limit = limit;
+    }
+    if (nextToken) {
+      gqlAPIServiceArguments.nextToken = nextToken;
+    }
+    const response = (await API.graphql(
+      graphqlOperation(statement, gqlAPIServiceArguments)
+    )) as any;
+    return <GamesByUserQuery>response.data.gamesByUser;
   }
   OnCreateGameListener(
     filter?: ModelSubscriptionGameFilterInput

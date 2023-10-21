@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -24,6 +24,8 @@ import { RulesComponent } from './rules/rules.component';
 import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { LeaderboardDialogComponent } from './leaderboard-dialog/leaderboard-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
     RulesComponent,
     RulesDialogComponent,
     ScoreDialogComponent,
-    LoadingCubeComponent
+    LoadingCubeComponent,
+    LeaderboardDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +54,13 @@ import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
     MatIconModule,
     MatDialogModule,
     MatInputModule,
-    MarkdownModule.forRoot()
+    MarkdownModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [
     HighlightService

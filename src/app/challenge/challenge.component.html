@@ -1,131 +1,109 @@
-<mat-sidenav-container autosize>
-    <mat-sidenav #challengesListDrawer position="start" opened="false" mode="over">
-        <div class="my-sidenav-content">
-            <div class="header">
-                <h4>Challenges</h4>
-            </div>
-            <div class="challenges">
-                <mat-nav-list>
-                    <mat-list-item *ngFor="let challenge of game.challengesData | keyvalue"
-                        (click)="loadChallenge(challenge.key)"
-                        [ngClass]="{'selected': challenge.key == currentChallenge}">
-                        <div class="flex flex-direction-row justify-content-space-between">
-                            <div>{{challenge.value.name}}</div>
-                            <mat-icon *ngIf="game?.challengesTempData[challenge.key]?.done">task_alt</mat-icon>
-                        </div>
-                    </mat-list-item>
-                </mat-nav-list>
-            </div>
+<div class="nav">
+    <div class="flex flex-direction-row justify-content-space-between">
+        <div class="flex align-items-center">
+            <!-- <button type="button" matSuffix mat-icon-button aria-label="Show list of challents"
+                (click)="challengesListDrawer.toggle()">
+
+                <mat-icon aria-label="Check icon" fontIcon="menu"></mat-icon>
+            </button> -->
         </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-        <div class="nav">
-            <div class="flex flex-direction-row justify-content-space-between">
-                <div class="flex align-items-center">
-                    <button type="button" matSuffix mat-icon-button aria-label="Show list of challents"
-                        (click)="challengesListDrawer.toggle()">
 
-                        <mat-icon aria-label="Check icon" fontIcon="menu"></mat-icon>
-                    </button>
-                </div>
-
-                <div class="challenge flex align-items-center">{{challengeData?.name}}
-                </div>
-                <div class="environment flex align-items-center">
-                    <div *ngIf="game.game?.user" class="padding-right-1">
-                        Go {{game.game?.user}}! ({{game.game.score}} points)
-                    </div>
-                    <!-- <div>
+        <div class="challenge flex align-items-center">{{challengeData?.name}}
+        </div>
+        <div class="environment flex align-items-center">
+            <div *ngIf="game.game?.user" class="padding-right-1">
+                Go {{game.game?.user}}! ({{game.game.score}} points)
+            </div>
+            <!-- <div>
                         {{game.stopwatch.getElapsedTimeInSeconds()}}
                     </div> -->
-                    <div class="flex align-items-center">
-                        <button mat-flat-button color="primary" (click)="newGame()">New game!</button>
+            <div class="flex align-items-center">
+                <button mat-flat-button color="primary" (click)="newGame()">New game!</button>
+            </div>
+            <button mat-icon-button color="accent" (click)="showRules()">
+                <mat-icon aria-label="Help icon" fontIcon="help_center"></mat-icon>
+            </button>
+            <button mat-icon-button color="primary" (click)="openLeaderBoardDialog()">
+                <mat-icon aria-label="Trophy icon">emoji_events</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="main flex-grow overflow-hidden">
+    <div class="container flex flex-direction-row">
+        <div class="panel panel-left flex flex-direction-column overflow-hidden">
+            <div class="bloc enonce flex-grow">
+                <div class="content">
+                    <div class="header">
+                        Problem statment
                     </div>
-                    <button mat-icon-button color="accent" (click)="showRules()">
-                        <mat-icon aria-label="Help icon" fontIcon="help_center"></mat-icon>
-                    </button>
-                    <button mat-icon-button color="primary">
-                        <mat-icon aria-label="Trophy icon">emoji_events</mat-icon>
-                    </button>
+                    <div class="body overflow-auto problem" markdown [data]="challengeDescription">
+                    </div>
+                </div>
+            </div>
+            <div class="bloc results">
+                <div class="content">
+                    <div class="header">
+                        Tests results
+                    </div>
+                    <div class="body flex no-padding overflow-hidden">
+                        <mat-tab-group animationDuration="0ms">
+                            <mat-tab label="Results">
+                                <app-test-result [result]="jsonResult"
+                                    [rawTests]="this.currentChallengePath['test.js'].file.contents"></app-test-result>
+                            </mat-tab>
+                            <mat-tab label="Tests">
+                                <div class="code" [innerHTML]="tests | language : 'javascript' | markdown">
+                                </div>
+                            </mat-tab>
+                            <mat-tab label="Terminal">
+                                <div class="terminal" id="terminal" #terminal></div>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel panel-center flex-grow flex flex-direction-column overflow-hidden">
+            <div class="bloc proposed-code flex flex-grow overflow-hidden">
+                <div class="content">
+                    <div class="header">Code</div>
+                    <div class="body flex-grow no-padding overflow-hidden flex flex-direction-column">
+                        <div class="prompt">
+                            <form id="new-message-form" [formGroup]="newMessageFormGroup">
+                                <div>/**</div>
+                                <div class="flex flex-direction-row">
+                                    <div class="stars">
+                                        <div *ngFor="let star of numberofLinesInPromptInput" class="star">*
+                                        </div>
+                                    </div>
+                                    <textarea id="prompt-input" #promptInput (input)="onInputInput($event)"
+                                        placeholder="Let's code together. Tell me what you want."
+                                        formControlName="promptFormControl"></textarea>
+                                </div>
+                                <div>**/</div>
+                            </form>
+                        </div>
+                        <app-loading-cube *ngIf="loadinActivities.size > 0"
+                            class="flex align-items-center justify-content-center overflow-hidden"></app-loading-cube>
+                        <div class="code overflow-hidden"
+                            [innerHTML]="proposedCode | language : 'javascript' | markdown"></div>
+                        <pre
+                            class="export padding-1 language-javascript">module.exports = {{challengeData.function.name}};</pre>
+                    </div>
+                    <div class="footer">
+                        <div class="actions flex flex-direction-row justify-content-flex-end">
+                            <button mat-flat-button color="primary" [disabled]="loadinActivities.size > 0"
+                                (click)="generateCode()" class="margin-right-1">Generate code!</button>
+                            <button mat-flat-button color="primary" [disabled]="loadinActivities.size > 0"
+                                (click)="runTests()">Run test</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="main flex-grow overflow-hidden">
-            <div class="container flex flex-direction-row">
-                <div class="panel panel-left flex flex-direction-column overflow-hidden">
-                    <div class="bloc enonce flex-grow">
-                        <div class="content">
-                            <div class="header">
-                                Problem statment
-                            </div>
-                            <div class="body overflow-auto problem" markdown [data]="challengeDescription">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bloc results">
-                        <div class="content">
-                            <div class="header">
-                                Tests results
-                            </div>
-                            <div class="body flex no-padding overflow-hidden">
-                                <mat-tab-group animationDuration="0ms">
-                                    <mat-tab label="Results">
-                                        <app-test-result [result]="jsonResult"
-                                            [rawTests]="this.currentChallengePath['test.js'].file.contents"></app-test-result>
-                                    </mat-tab>
-                                    <mat-tab label="Tests">
-                                        <div class="code" [innerHTML]="tests | language : 'javascript' | markdown">
-                                        </div>
-                                    </mat-tab>
-                                    <mat-tab label="Terminal">
-                                        <div class="terminal" id="terminal" #terminal></div>
-                                    </mat-tab>
-                                </mat-tab-group>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="panel panel-center flex-grow flex flex-direction-column overflow-hidden">
-                    <div class="bloc proposed-code flex flex-grow overflow-hidden">
-                        <div class="content">
-                            <div class="header">Code</div>
-                            <div class="body flex-grow no-padding overflow-hidden flex flex-direction-column">
-                                <div class="prompt">
-                                    <form id="new-message-form" [formGroup]="newMessageFormGroup">
-                                        <div>/**</div>
-                                        <div class="flex flex-direction-row">
-                                            <div class="stars">
-                                                <div *ngFor="let star of numberofLinesInPromptInput" class="star">*
-                                                </div>
-                                            </div>
-                                            <textarea id="prompt-input" #promptInput (input)="onInputInput($event)"
-                                                placeholder="Let's code together. Tell me what you want."
-                                                formControlName="promptFormControl"></textarea>
-                                        </div>
-                                        <div>**/</div>
-                                    </form>
-                                </div>
-                                <app-loading-cube *ngIf="loadinActivities.size > 0" class="flex align-items-center justify-content-center overflow-hidden"></app-loading-cube>
-                                <div class="code overflow-hidden"
-                                    [innerHTML]="proposedCode | language : 'javascript' | markdown"></div>
-                                <pre
-                                    class="export padding-1 language-javascript">module.exports = {{challengeData.function.name}};</pre>
-                            </div>
-                            <div class="footer">
-                                <div class="actions flex flex-direction-row justify-content-flex-end">
-                                    <button mat-flat-button color="primary" [disabled]="loadinActivities.size > 0"
-                                        (click)="generateCode()" class="margin-right-1">Generate code!</button>
-                                    <button mat-flat-button color="primary" [disabled]="loadinActivities.size > 0"
-                                        (click)="runTests()">Run test</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+    </div>
+</div>

@@ -28,6 +28,7 @@ export class GameService {
   };
   currentLanguage = "javascript";
   challengesData: any = {};
+  terminal: Terminal;
 
   // Store data relatives to 
   challengesTempData: Record<string, ChallengeTempData> = {};
@@ -39,17 +40,24 @@ export class GameService {
   ) {
     this.buildChallengeData();
     this.challenges = files;
+    this.terminal = new Terminal({
+      convertEol: true,
+    });
   }
 
+  checkifUserExists(playerName: string) {
+    
+  }
 
   async newGame(playerName: string) {
     this.game = {
       user: playerName,
       score: 0
-    };
+    } as Game;
 
     try {
-      // this.game = await this.api.CreateGame(this.game);
+      this.game = await this.api.CreateGame(this.game);
+
       console.log('Game created!');
       console.log(this.game);
 
@@ -67,39 +75,42 @@ export class GameService {
     await this.webcontainerInstance.mount(files);
   }
 
-  async initContainer(terminal: Terminal) {
+  async initContainer() {
 
+    console.log("bootwebcontainer");
     this.bootstrapSteps.bootwebcontainer = "sync";
     this.webcontainerInstance = await WebContainer.boot();
     this.bootstrapSteps.bootwebcontainer = "check_circle";
 
+    console.log("mountwebcontainer");
     this.bootstrapSteps.mountwebcontainer = "sync";
     await this.mountFileSystem();
-    this.startShell(terminal);
     this.bootstrapSteps.mountwebcontainer = "check_circle";
 
+    console.log("installdependancies");
     this.bootstrapSteps.installdependancies = "sync";
-    const exitCode = await this.installDependencies(terminal);
+    const exitCode = await this.installDependencies();
     this.bootstrapSteps.installdependancies = "check_circle";
+    console.log("installdependancies done");
   }
 
-  async installDependencies(terminal: Terminal) {
+  async installDependencies() {
     // Install dependencies
     const installProcess = await this.webcontainerInstance.spawn('npm', ['install']);
 
-    installProcess.output.pipeTo(new WritableStream({
-      write(data) {
-        terminal.write(data);
+    // installProcess.output.pipeTo(new WritableStream({
+      // write(data) {
+        //terminal.write(data);
         // console.log(data);
-      }
-    }));
+      // }
+    // }));
 
     // Wait for install command to exit
     return installProcess.exit;
   }
 
-  async runTests(terminal: Terminal, challengeId: string): Promise<any> {
-    const t = terminal;
+  async runTests(challengeId: string): Promise<any> {
+    const t = this.terminal;
     let th = this;
     // const runTestProcess = await this.webcontainerInstance.spawn('npm', ['run', 'jest']);
     this.stopwatch.pause();
@@ -107,7 +118,6 @@ export class GameService {
     runTestProcess.output.pipeTo(new WritableStream({
       write(data) {
         t.write(data);
-        // this.terminal.write(data);
         console.log(data);
         th.loadResult(challengeId);
       }
@@ -156,7 +166,12 @@ export class GameService {
       bonusPoints: bonusPoints
     }
   }
-  updateScore(inc: number) {
+  saveGame(inc: number) {
+    debugger;
+    this.api.UpdateGame({
+      id: this.game.id,
+      score: this.game.score
+    });
     // this.game.score += inc;
   }
   // async updateScore(challengeId: string, bonusPoints: number = 0) {
@@ -205,8 +220,8 @@ export class GameService {
     }
   }
 
-  async startShell(terminal: Terminal) {
-    const t = terminal
+  async startShell() {
+    const t = this.terminal
     const shellProcess = await this.webcontainerInstance.spawn('jsh');
     shellProcess.output.pipeTo(
       new WritableStream({
