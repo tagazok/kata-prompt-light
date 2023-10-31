@@ -27,7 +27,7 @@
 :root {
     --main-bg-color: #fff;
     --main-text-color: #17113a;
-
+    --secondary-text-color: rgb(138, 138, 138);  //hsl(from var(var(--main-text-color) h s 80%));
     --bloc-content-bg-color: #fafcfd;
     --bloc-content-hf-bg-color: #fff;
     --bloc-content-hf-border-color: #e9e9e9;

@@ -8,6 +8,7 @@ mutation CreateGame(
     id
     user
     score
+    event
     createdAt
     updatedAt
     __typename
@@ -22,6 +23,7 @@ mutation UpdateGame(
     id
     user
     score
+    event
     createdAt
     updatedAt
     __typename
@@ -36,6 +38,7 @@ mutation DeleteGame(
     id
     user
     score
+    event
     createdAt
     updatedAt
     __typename

@@ -26,6 +26,9 @@ import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LeaderboardDialogComponent } from './leaderboard-dialog/leaderboard-dialog.component';
+import { PlaceholderComponent } from './placeholder/placeholder.component';
+import { HomeComponent } from './home/home.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +41,10 @@ import { LeaderboardDialogComponent } from './leaderboard-dialog/leaderboard-dia
     RulesDialogComponent,
     ScoreDialogComponent,
     LoadingCubeComponent,
-    LeaderboardDialogComponent
+    LeaderboardDialogComponent,
+    PlaceholderComponent,
+    HomeComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

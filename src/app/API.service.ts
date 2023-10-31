@@ -19,11 +19,13 @@ export type CreateGameInput = {
   id?: string | null;
   user: string;
   score: number;
+  event: string;
 };
 
 export type ModelGameConditionInput = {
   user?: ModelStringInput | null;
   score?: ModelIntInput | null;
+  event?: ModelStringInput | null;
   and?: Array<ModelGameConditionInput | null> | null;
   or?: Array<ModelGameConditionInput | null> | null;
   not?: ModelGameConditionInput | null;
@@ -85,6 +87,7 @@ export type Game = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -93,6 +96,7 @@ export type UpdateGameInput = {
   id: string;
   user?: string | null;
   score?: number | null;
+  event?: string | null;
 };
 
 export type DeleteGameInput = {
@@ -103,6 +107,7 @@ export type ModelGameFilterInput = {
   id?: ModelIDInput | null;
   user?: ModelStringInput | null;
   score?: ModelIntInput | null;
+  event?: ModelStringInput | null;
   and?: Array<ModelGameFilterInput | null> | null;
   or?: Array<ModelGameFilterInput | null> | null;
   not?: ModelGameFilterInput | null;
@@ -130,6 +135,15 @@ export type ModelGameConnection = {
   nextToken?: string | null;
 };
 
+export type ModelIntKeyConditionInput = {
+  eq?: number | null;
+  le?: number | null;
+  lt?: number | null;
+  ge?: number | null;
+  gt?: number | null;
+  between?: Array<number | null> | null;
+};
+
 export enum ModelSortDirection {
   ASC = "ASC",
   DESC = "DESC"
@@ -139,6 +153,7 @@ export type ModelSubscriptionGameFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   user?: ModelSubscriptionStringInput | null;
   score?: ModelSubscriptionIntInput | null;
+  event?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionGameFilterInput | null> | null;
   or?: Array<ModelSubscriptionGameFilterInput | null> | null;
 };
@@ -190,6 +205,7 @@ export type CreateGameMutation = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -199,6 +215,7 @@ export type UpdateGameMutation = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -208,6 +225,7 @@ export type DeleteGameMutation = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -217,6 +235,7 @@ export type GetGameQuery = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -228,19 +247,21 @@ export type ListGamesQuery = {
     id: string;
     user: string;
     score: number;
+    event: string;
     createdAt: string;
     updatedAt: string;
   } | null>;
   nextToken?: string | null;
 };
 
-export type GamesByUserQuery = {
+export type UsersByScoreQuery = {
   __typename: "ModelGameConnection";
   items: Array<{
     __typename: "Game";
     id: string;
     user: string;
     score: number;
+    event: string;
     createdAt: string;
     updatedAt: string;
   } | null>;
@@ -252,6 +273,7 @@ export type OnCreateGameSubscription = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -261,6 +283,7 @@ export type OnUpdateGameSubscription = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -270,6 +293,7 @@ export type OnDeleteGameSubscription = {
   id: string;
   user: string;
   score: number;
+  event: string;
   createdAt: string;
   updatedAt: string;
 };
@@ -288,6 +312,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -313,6 +338,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -338,6 +364,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -360,6 +387,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -385,6 +413,7 @@ export class APIService {
             id
             user
             score
+            event
             createdAt
             updatedAt
           }
@@ -406,16 +435,18 @@ export class APIService {
     )) as any;
     return <ListGamesQuery>response.data.listGames;
   }
-  async GamesByUser(
-    user: string,
+  async UsersByScore(
+    event: string,
+    score?: ModelIntKeyConditionInput,
     sortDirection?: ModelSortDirection,
     filter?: ModelGameFilterInput,
     limit?: number,
     nextToken?: string
-  ): Promise<GamesByUserQuery> {
-    const statement = `query GamesByUser($user: String!, $sortDirection: ModelSortDirection, $filter: ModelGameFilterInput, $limit: Int, $nextToken: String) {
-        gamesByUser(
-          user: $user
+  ): Promise<UsersByScoreQuery> {
+    const statement = `query UsersByScore($event: String!, $score: ModelIntKeyConditionInput, $sortDirection: ModelSortDirection, $filter: ModelGameFilterInput, $limit: Int, $nextToken: String) {
+        usersByScore(
+          event: $event
+          score: $score
           sortDirection: $sortDirection
           filter: $filter
           limit: $limit
@@ -427,6 +458,7 @@ export class APIService {
             id
             user
             score
+            event
             createdAt
             updatedAt
           }
@@ -434,8 +466,11 @@ export class APIService {
         }
       }`;
     const gqlAPIServiceArguments: any = {
-      user
+      event
     };
+    if (score) {
+      gqlAPIServiceArguments.score = score;
+    }
     if (sortDirection) {
       gqlAPIServiceArguments.sortDirection = sortDirection;
     }
@@ -451,7 +486,7 @@ export class APIService {
     const response = (await API.graphql(
       graphqlOperation(statement, gqlAPIServiceArguments)
     )) as any;
-    return <GamesByUserQuery>response.data.gamesByUser;
+    return <UsersByScoreQuery>response.data.usersByScore;
   }
   OnCreateGameListener(
     filter?: ModelSubscriptionGameFilterInput
@@ -464,6 +499,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -490,6 +526,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }
@@ -516,6 +553,7 @@ export class APIService {
           id
           user
           score
+          event
           createdAt
           updatedAt
         }

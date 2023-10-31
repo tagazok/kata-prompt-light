@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { GameService } from '../game.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-game-dialog',
@@ -15,6 +16,7 @@ export class NewGameDialogComponent {
   
   constructor(
     private game: GameService,
+    private router: Router,
     private dialogRef: MatDialogRef<NewGameDialogComponent>
   ) {
     if (!this.game.game) {
@@ -24,7 +26,9 @@ export class NewGameDialogComponent {
   async newGame() {
     try {
       await this.game.newGame(this.newGameFormGroup.value.userNameFormControl);
+
       this.dialogRef.close();
+      this.router.navigate(['/game', this.game.game.id])
     } catch (error) {
       
     }

@@ -6,7 +6,7 @@
             <input matInput placeholder="What is your name?" formControlName="userNameFormControl">
         </mat-form-field>
         <div class="flex justify-content-center">
-            <button mat-flat-button color="primary" (click)="newGame()">PLAY</button>
+            <button mat-flat-button color="primary" (click)="newGame()" [disabled]="!newGameFormGroup.valid">PLAY</button>
         </div>
     </form>
 </div>

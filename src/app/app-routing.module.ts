@@ -2,14 +2,37 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChallengeComponent } from './challenge/challenge.component';
 import { webcontainersResolver } from './webcontainers.resolver';
-import { AppComponent } from './app.component';
+import { PlaceholderComponent } from './placeholder/placeholder.component';
+import { HomeComponent } from './home/home.component';
+import { GameComponent } from './game/game.component';
+import { gameResolver } from './game.resolver';
 
 const routes: Routes = [
-  { 
-    path: 'challenge/:challengeId', 
-    component: ChallengeComponent,
-    resolve: { resolver: webcontainersResolver } 
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'game/:id',
+    component: GameComponent,
+    // resolve: { resolver: webcontainersResolver },
+    resolve: { resolver: gameResolver},
+    children: [
+      {
+        path: '',
+        component: PlaceholderComponent
+      },
+      {
+        path: 'challenge',
+        redirectTo: '',
+      },
+      { 
+        path: 'challenge/:challengeId', 
+        component: ChallengeComponent
+      }
+    ]
   }
+  
 ];
 
 @NgModule({

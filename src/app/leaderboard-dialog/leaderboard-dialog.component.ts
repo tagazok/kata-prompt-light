@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GameService } from '../game.service';
 import { APIService } from '../API.service';
+import { API, graphqlOperation } from 'aws-amplify';
 
 @Component({
   selector: 'app-leaderboard-dialog',
@@ -8,51 +9,32 @@ import { APIService } from '../API.service';
   styleUrls: ['./leaderboard-dialog.component.scss']
 })
 export class LeaderboardDialogComponent {
-  leaders = [
-    {
-      user: "Olivier",
-      score: 1000
-    },
-    {
-      user: "Etienne",
-      score: 900
-    },
-    {
-      user: "Antonin",
-      score: 870
-    },
-    {
-      user: "Isabelle",
-      score: 810
-    },
-    {
-      user: "Antoine",
-      score: 780
-    },
-    {
-      user: "Madeleine",
-      score: 700
-    },
-    {
-      user: "Raymond",
-      score: 650
-    },
-    {
-      user: "Andrée",
-      score: 600
-    },
-    {
-      user: "Jaques",
-      score: 600
-    },
-    {
-      user: "Alice",
-      score: 580
-    }
-  ]
-  constructor(
-    private api: APIService,
-  ) {
+  leaders = [];
 
+  constructor() {
+    this.getLeaderBoard();
+  }
+
+  async getLeaderBoard() {
+    const statement = `query usersByDescendingScore {
+      usersByScore(
+        sortDirection: DESC
+        event: "re:Invent2023"
+        limit: 10
+      ) {
+        items {
+          id
+          user
+          score
+          createdAt
+          updatedAt
+        },
+        nextToken
+      }
+    }`;
+    const response = (await API.graphql(
+      graphqlOperation(statement)
+    )) as any;
+    this.leaders = response.data.usersByScore.items;
   }
 }

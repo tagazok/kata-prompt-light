@@ -22,7 +22,7 @@ import { LeaderboardDialogComponent } from '../leaderboard-dialog/leaderboard-di
   templateUrl: './challenge.component.html',
   styleUrls: ['./challenge.component.scss']
 })
-export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ChallengeComponent implements OnInit, AfterViewInit {
   @ViewChild('terminal') terminalEl?: ElementRef;
   @ViewChild('promptInput') promptInput: any;
   @ViewChild('challengesListDrawer') challengesListDrawer?: MatSidenav;
@@ -66,30 +66,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {
     this.proposedCode = "";
     this.loadinActivities = new Set();
-    // this.terminal = new Terminal({
-    //   convertEol: true,
-    // });
-    this.bootstrap();
   }
-
-  // buildChallengeData() {
-  //   for (const key in files[this.currentLanguage].directory) {
-  //     const element = files[this.currentLanguage].directory[key].directory['data.json']?.file.contents || {};
-
-  //     this.challengesData[key] = JSON.parse(element);
-  //   }
-  // }
-
-  // loadChallenge(challengeId: string) {
-  //   this.router.navigate(
-  //     [],
-  //     {
-  //       relativeTo: this.route,
-  //       queryParams: { challengeId: challengeId },
-  //       queryParamsHandling: 'merge'
-  //     });
-  //   this.challengesListDrawer?.close();
-  // }
 
   updateCurrentChallenge() {
     console.log(this.game.challenges);
@@ -140,7 +117,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit, OnDestroy {
   async initGame() {
     // await this.game.initContainer();
     if (!this.game.game) {
-      this.newGame();
+      // this.newGame();
     };
     // this.bootstrapDialog?.close();
   }
@@ -248,35 +225,5 @@ module.exports = ${this.challengeData.function.name};
     const nbLines = Math.round(this.promptInput.nativeElement.scrollHeight / 18);
 
     this.numberofLinesInPromptInput = Array(nbLines).fill(0).map((x, i) => i);
-  }
-
-  bootstrap() {
-    // this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
-    //   data: {
-    //     bootstrapSteps: this.game.bootstrapSteps
-    //   }
-    // });
-  }
-
-  ngOnDestroy() {
-    // clearInterval(this.timerRef);
-    // this.timerRef.unsubscribe();
-  }
-
-  showRules() {
-    this.dialog.open(RulesDialogComponent);
-  }
-  
-  newGame() {
-
-    const rulesGameDialog = this.dialog.open(RulesDialogComponent);
-
-    rulesGameDialog.afterClosed().subscribe(result => {
-      this.dialog.open(NewGameDialogComponent);
-    });
-  }
-
-  openLeaderBoardDialog() {
-    this.dialog.open(LeaderboardDialogComponent);
   }
 }

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { WebContainer } from '@webcontainer/api';
 import { files } from '../assets/files';
 import { Terminal } from 'xterm';
 import { APIService, Game } from './API.service';
 import { StopwatchService } from './stopwatch.service';
+import { WebContainer } from '@webcontainer/api';
 
 const referenceTime = 60; // Reference time for the challenge in seconds
 const timeBonusFactor = 0.5; // Time bonus factor (points per second saved)
+const event = "re:Invent2023";
 
 interface ChallengeTempData {
   passTests: Set<string>,
@@ -49,15 +50,19 @@ export class GameService {
     
   }
 
+  async init(gameId: string) {
+    this.game = await this.api.GetGame(gameId);
+  }
+
   async newGame(playerName: string) {
     this.game = {
       user: playerName,
-      score: 0
+      score: 0,
+      event: event
     } as Game;
 
     try {
       this.game = await this.api.CreateGame(this.game);
-
       console.log('Game created!');
       console.log(this.game);
 
@@ -167,7 +172,6 @@ export class GameService {
     }
   }
   saveGame(inc: number) {
-    debugger;
     this.api.UpdateGame({
       id: this.game.id,
       score: this.game.score
