@@ -19,12 +19,14 @@ export type CreateGameInput = {
   id?: string | null;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
 };
 
 export type ModelGameConditionInput = {
   user?: ModelStringInput | null;
   score?: ModelIntInput | null;
+  completedChallenges?: ModelStringInput | null;
   event?: ModelStringInput | null;
   and?: Array<ModelGameConditionInput | null> | null;
   or?: Array<ModelGameConditionInput | null> | null;
@@ -87,6 +89,7 @@ export type Game = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -96,6 +99,7 @@ export type UpdateGameInput = {
   id: string;
   user?: string | null;
   score?: number | null;
+  completedChallenges?: Array<string | null> | null;
   event?: string | null;
 };
 
@@ -107,6 +111,7 @@ export type ModelGameFilterInput = {
   id?: ModelIDInput | null;
   user?: ModelStringInput | null;
   score?: ModelIntInput | null;
+  completedChallenges?: ModelStringInput | null;
   event?: ModelStringInput | null;
   and?: Array<ModelGameFilterInput | null> | null;
   or?: Array<ModelGameFilterInput | null> | null;
@@ -153,6 +158,7 @@ export type ModelSubscriptionGameFilterInput = {
   id?: ModelSubscriptionIDInput | null;
   user?: ModelSubscriptionStringInput | null;
   score?: ModelSubscriptionIntInput | null;
+  completedChallenges?: ModelSubscriptionStringInput | null;
   event?: ModelSubscriptionStringInput | null;
   and?: Array<ModelSubscriptionGameFilterInput | null> | null;
   or?: Array<ModelSubscriptionGameFilterInput | null> | null;
@@ -205,6 +211,7 @@ export type CreateGameMutation = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -215,6 +222,7 @@ export type UpdateGameMutation = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -225,6 +233,7 @@ export type DeleteGameMutation = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -235,6 +244,7 @@ export type GetGameQuery = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -247,6 +257,7 @@ export type ListGamesQuery = {
     id: string;
     user: string;
     score: number;
+    completedChallenges?: Array<string | null> | null;
     event: string;
     createdAt: string;
     updatedAt: string;
@@ -261,6 +272,7 @@ export type UsersByScoreQuery = {
     id: string;
     user: string;
     score: number;
+    completedChallenges?: Array<string | null> | null;
     event: string;
     createdAt: string;
     updatedAt: string;
@@ -273,6 +285,7 @@ export type OnCreateGameSubscription = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -283,6 +296,7 @@ export type OnUpdateGameSubscription = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -293,6 +307,7 @@ export type OnDeleteGameSubscription = {
   id: string;
   user: string;
   score: number;
+  completedChallenges?: Array<string | null> | null;
   event: string;
   createdAt: string;
   updatedAt: string;
@@ -312,6 +327,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -338,6 +354,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -364,6 +381,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -387,6 +405,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -413,6 +432,7 @@ export class APIService {
             id
             user
             score
+            completedChallenges
             event
             createdAt
             updatedAt
@@ -458,6 +478,7 @@ export class APIService {
             id
             user
             score
+            completedChallenges
             event
             createdAt
             updatedAt
@@ -499,6 +520,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -526,6 +548,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt
@@ -553,6 +576,7 @@ export class APIService {
           id
           user
           score
+          completedChallenges
           event
           createdAt
           updatedAt

@@ -5,6 +5,7 @@ query GetGame($id: ID!) {
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt
@@ -22,6 +23,7 @@ query ListGames(
       id
       user
       score
+      completedChallenges
       event
       createdAt
       updatedAt
@@ -52,6 +54,7 @@ query UsersByScore(
       id
       user
       score
+      completedChallenges
       event
       createdAt
       updatedAt

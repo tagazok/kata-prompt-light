@@ -1,8 +1,9 @@
 <div class="leaderboard prompt padding-1">
+    <div class="title margin-bottom-1">Leaderboard</div>
     <div class="results">
         <div class="header rank">#</div>
-        <div class="label">USERNAME</div>
-        <div class="value">SCORE</div>
+        <div class="header label">USERNAME</div>
+        <div class="header value">SCORE</div>
         <ng-container *ngFor="let user of leaders; let index = index">
             <div class="rank">
                 <div class="circle rank{{index + 1}}">{{index + 1}}</div>

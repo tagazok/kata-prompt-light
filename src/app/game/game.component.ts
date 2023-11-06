@@ -6,6 +6,8 @@ import { BootstrapDialogComponent } from '../bootstrap-dialog/bootstrap-dialog.c
 import { LeaderboardDialogComponent } from '../leaderboard-dialog/leaderboard-dialog.component';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { NewGameDialogComponent } from '../new-game-dialog/new-game-dialog.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { TerminalBottomSheetComponent } from '../terminal-bottom-sheet/terminal-bottom-sheet.component';
 
 @Component({
   selector: 'app-game',
@@ -20,7 +22,8 @@ export class GameComponent {
   constructor(
     public game: GameService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private TerminalBottomSheet: MatBottomSheet
   ) {
     // router.events.subscribe((routerEvent: any) => {
     //   if (routerEvent.url?.startsWith("/challenge/")) {
@@ -28,6 +31,10 @@ export class GameComponent {
     //   }
     // });
     this.initContainer();
+  }
+
+  showTerminal() {
+    this.TerminalBottomSheet.open(TerminalBottomSheetComponent);
   }
 
   async initContainer() {
@@ -67,12 +74,13 @@ export class GameComponent {
     this.dialog.open(LeaderboardDialogComponent);
   }
 
-  newGame() {
+  endGame() {
 
-    const rulesGameDialog = this.dialog.open(RulesDialogComponent);
+    // const rulesGameDialog = this.dialog.open(RulesDialogComponent);
 
-    rulesGameDialog.afterClosed().subscribe(result => {
-      this.dialog.open(NewGameDialogComponent);
-    });
+    // rulesGameDialog.afterClosed().subscribe(result => {
+    //   this.dialog.open(NewGameDialogComponent);
+    // });
+    // TODO
   }
 }

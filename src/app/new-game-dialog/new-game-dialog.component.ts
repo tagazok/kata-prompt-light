@@ -19,9 +19,9 @@ export class NewGameDialogComponent {
     private router: Router,
     private dialogRef: MatDialogRef<NewGameDialogComponent>
   ) {
-    if (!this.game.game) {
-      this.dialogRef.disableClose = true;
-    }
+    // if (!this.game.game) {
+    //   this.dialogRef.disableClose = true;
+    // }
   }
   async newGame() {
     try {

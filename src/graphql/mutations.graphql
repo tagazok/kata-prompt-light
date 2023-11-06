@@ -8,6 +8,7 @@ mutation CreateGame(
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt
@@ -23,6 +24,7 @@ mutation UpdateGame(
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt
@@ -38,6 +40,7 @@ mutation DeleteGame(
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt

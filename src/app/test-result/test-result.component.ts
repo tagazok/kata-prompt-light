@@ -10,6 +10,7 @@ export class TestResultComponent {
   // @Input() rawTests: any = "";
   tests: any = [];
   private rTests = "";
+  selectedTest: any;
 
   @Input() set rawTests(value: any) {
     

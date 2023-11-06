@@ -6,7 +6,8 @@
         "nodemon": "latest",
         "jest": "latest",
         "@jest/globals": "latest",
-        "python-shell": "latest"
+        "python-shell": "latest",
+        "jest-json-reporter": "latest"
     },
     "scripts": {
         "start": "nodemon --watch './' index.js",

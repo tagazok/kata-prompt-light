@@ -5,6 +5,7 @@ subscription OnCreateGame($filter: ModelSubscriptionGameFilterInput) {
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt
@@ -17,6 +18,7 @@ subscription OnUpdateGame($filter: ModelSubscriptionGameFilterInput) {
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt
@@ -29,6 +31,7 @@ subscription OnDeleteGame($filter: ModelSubscriptionGameFilterInput) {
     id
     user
     score
+    completedChallenges
     event
     createdAt
     updatedAt

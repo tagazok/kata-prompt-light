@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { GameService } from '../game.service';
-import { APIService } from '../API.service';
+import { APIService, Game } from '../API.service';
 import { API, graphqlOperation } from 'aws-amplify';
 
 @Component({
@@ -9,7 +9,7 @@ import { API, graphqlOperation } from 'aws-amplify';
   styleUrls: ['./leaderboard-dialog.component.scss']
 })
 export class LeaderboardDialogComponent {
-  leaders = [];
+  leaders: Game[] = [];
 
   constructor() {
     this.getLeaderBoard();

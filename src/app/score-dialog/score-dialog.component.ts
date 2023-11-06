@@ -49,7 +49,7 @@ export class ScoreDialogComponent {
                 const totalInterval = setInterval(() => {
                   if (this.game.game.score === this.scoreData.total) {
                     clearInterval(totalInterval);
-                    this.game.saveGame(scoreData.tests + scoreData.timeBonus + scoreData.challenge);
+                    this.game.saveGame(scoreData.tests + scoreData.timeBonus + (scoreData.challenge || 0));
                     this.disableClose = false;
                   } else {
                     this.game.game.score++

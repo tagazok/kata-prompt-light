@@ -13,6 +13,10 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
+    path: 'game',
+    redirectTo: ''
+  },
+  {
     path: 'game/:id',
     component: GameComponent,
     // resolve: { resolver: webcontainersResolver },

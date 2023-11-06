@@ -8,15 +8,20 @@
                 <mat-nav-list>
                     <mat-list-item *ngFor="let challenge of game.challengesData | keyvalue"
                         [routerLink]="['challenge', challenge.key]"
-                        [ngClass]="{'selected': challenge.key == currentChallenge}">
+                        [ngClass]="{'selected': challenge.key == game.currentChallenge}">
 
                         <div class="flex flex-direction-row justify-content-space-between">
                             <div>{{challenge.value.name}}</div>
-                            <mat-icon *ngIf="game?.challengesTempData[challenge.key]?.done">task_alt</mat-icon>
+                            <!-- <mat-icon *ngIf="game?.challengesTempData[challenge.key]?.done">task_alt</mat-icon> -->
+                            <mat-icon *ngIf="game?.game?.completedChallenges?.includes(challenge.key)">task_alt</mat-icon>
                         </div>
                     </mat-list-item>
                 </mat-nav-list>
             </div>
+
+            <button mat-icon-button (click)="showTerminal()">
+                <mat-icon aria-label="Trophy icon">terminal</mat-icon>
+            </button>
         </div>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -41,7 +46,7 @@
                                 {{game.stopwatch.getElapsedTimeInSeconds()}}
                             </div> -->
                     <div class="flex align-items-center">
-                        <button mat-flat-button color="primary" (click)="newGame()">New game!</button>
+                        <button mat-flat-button color="warn" (click)="endGame()">End game</button>
                     </div>
                     <button mat-icon-button color="accent" (click)="showRules()">
                         <mat-icon aria-label="Help icon" fontIcon="help_center"></mat-icon>

@@ -9,6 +9,20 @@ const referenceTime = 60; // Reference time for the challenge in seconds
 const timeBonusFactor = 0.5; // Time bonus factor (points per second saved)
 const event = "re:Invent2023";
 
+interface ChallengeData {
+  name?: string,
+  completionPoints?: number
+  // description?: string,
+  tests?: Array<any>,
+  // time?: number,
+  // score?: number,
+  // done?: boolean
+}
+
+interface ChallengesData {
+  [name: string]: ChallengeData;
+}
+
 interface ChallengeTempData {
   passTests: Set<string>,
   elapsedTime: number,
@@ -27,9 +41,10 @@ export class GameService {
     mountwebcontainer: "radio_button_unchecked",
     installdependancies: "radio_button_unchecked"
   };
-  currentLanguage = "javascript";
-  challengesData: any = {};
+  challengesData: ChallengesData = {};
   terminal: Terminal;
+  currentLanguage = "javascript";
+  currentChallenge = "001";
 
   // Store data relatives to 
   challengesTempData: Record<string, ChallengeTempData> = {};
@@ -58,15 +73,17 @@ export class GameService {
     this.game = {
       user: playerName,
       score: 0,
-      event: event
+      event: event,
+      completedChallenges: new Array<String>()
     } as Game;
 
     try {
+      
       this.game = await this.api.CreateGame(this.game);
       console.log('Game created!');
       console.log(this.game);
 
-      await this.mountFileSystem();
+      // await this.mountFileSystem();
 
     } catch (error) {
       console.log('Error creating game...', error);
@@ -90,6 +107,7 @@ export class GameService {
     console.log("mountwebcontainer");
     this.bootstrapSteps.mountwebcontainer = "sync";
     await this.mountFileSystem();
+    await this.startShell();
     this.bootstrapSteps.mountwebcontainer = "check_circle";
 
     console.log("installdependancies");
@@ -102,13 +120,13 @@ export class GameService {
   async installDependencies() {
     // Install dependencies
     const installProcess = await this.webcontainerInstance.spawn('npm', ['install']);
-
-    // installProcess.output.pipeTo(new WritableStream({
-      // write(data) {
-        //terminal.write(data);
-        // console.log(data);
-      // }
-    // }));
+    const t = this.terminal;
+    installProcess.output.pipeTo(new WritableStream({
+      write(data) {
+        t.write(data);
+        console.log(data);
+      }
+    }));
 
     // Wait for install command to exit
     return installProcess.exit;
@@ -147,8 +165,13 @@ export class GameService {
       }
       if (test.status === 'passed') {
         if (!this.challengesTempData[challengeId].passTests.has(test.fullName)) {
-          console.log(`${test.fullName} - ${this.challengesData[challengeId].tests[test.fullName]}`);
-          score += this.challengesData[challengeId].tests[test.fullName];
+          // console.log(`${test.fullName} - ${this.challengesData?[challengeId].tests[test.fullName]}`);
+
+          const challengeTests = this.challengesData[challengeId].tests;
+          if (challengeTests) {
+            score += challengeTests[test.fullName]
+          }
+          // score += this.challengesData[challengeId].tests[test.fullName];
 
           // Specify that the test has already been ran so we don't count the points several times
           this.challengesTempData[challengeId].passTests.add(test.fullName);
@@ -159,8 +182,11 @@ export class GameService {
     }
     let timeBonus = 0;
     if (challenge != 0) {
-      this.challengesTempData[challengeId].done = true;
-      timeBonus = this.calculateTimeBonus(this.stopwatch.getElapsedTimeInSeconds());
+      if (!this.game.completedChallenges.includes(challengeId)) {
+        this.game.completedChallenges.push(challengeId);
+
+        timeBonus = this.calculateTimeBonus(this.stopwatch.getElapsedTimeInSeconds());
+      }
     }
     
 
@@ -174,7 +200,8 @@ export class GameService {
   saveGame(inc: number) {
     this.api.UpdateGame({
       id: this.game.id,
-      score: this.game.score
+      score: this.game.score,
+      completedChallenges: this.game.completedChallenges
     });
     // this.game.score += inc;
   }

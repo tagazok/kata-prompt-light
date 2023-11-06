@@ -34,10 +34,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   // terminal: Terminal;
   tests: any;
   proposedCode: string;
-  loadinActivities: Set<string> = new Set("Booting webcontainer");
+  loadingActivities: Set<string> = new Set("Booting webcontainer");
   // bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
-  currentLanguage = "javascript";
-  currentChallenge = "001";
   jsonResult = {};
   challengeDescription = "";
   challengeData: any = {};
@@ -65,17 +63,17 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     public dialog: MatDialog
   ) {
     this.proposedCode = "";
-    this.loadinActivities = new Set();
+    this.loadingActivities = new Set();
   }
 
   updateCurrentChallenge() {
     console.log(this.game.challenges);
-    console.log(this.currentChallenge);
-    console.log(this.game.challenges[this.currentLanguage]);
-    this.currentChallengePath = this.game.challenges[this.currentLanguage].directory[this.currentChallenge].directory;
+    console.log(this.game.currentChallenge);
+    console.log(this.game.challenges[this.game.currentLanguage]);
+    this.currentChallengePath = this.game.challenges[this.game.currentLanguage].directory[this.game.currentChallenge].directory;
     this.tests = this.currentChallengePath['test.js'].file.contents;
 
-    this.challengeData = this.game.challengesData[this.currentChallenge]
+    this.challengeData = this.game.challengesData[this.game.currentChallenge]
     this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
 
     this.proposedCode = "";
@@ -89,7 +87,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   ngOnInit() {
 
     this.route.params.subscribe(routeParams => {
-      this.currentChallenge = routeParams['challengeId'] || "";
+      this.game.currentChallenge = routeParams['challengeId'] || "";
       this.updateCurrentChallenge();
     });
     
@@ -127,24 +125,24 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
 
     if (this.terminalEl) {
       // this.terminal.open(this.terminalEl.nativeElement);
-      this.game.startShell();
+      // this.game.startShell();
       this.game.terminal.open(this.terminalEl.nativeElement);
     }
 
   }
 
   addLoading(operation: string) {
-    this.loadinActivities.add(operation);
+    this.loadingActivities.add(operation);
   }
 
   removeLoading(operation: string) {
-    this.loadinActivities.delete(operation);
+    this.loadingActivities.delete(operation);
   }
 
   generatePrompt() {
 
     let input = `
-    The generated code should be in ${this.currentLanguage}.
+    The generated code should be in ${this.game.currentLanguage}.
     `
 
     // Write a function in JavaScript called "sum" that takes 2 parameters and returns their sum
@@ -182,7 +180,7 @@ module.exports = ${this.challengeData.function.name};
       // }
       // await this.webcontainerInstance.mount(files);
 
-      const path = `/${this.currentLanguage}/${this.currentChallenge}/app.js`
+      const path = `/${this.game.currentLanguage}/${this.game.currentChallenge}/app.js`
       // await this.webcontainerInstance.fs.writeFile(path, code);
       this.game.saveCode(path, code);
 
@@ -199,19 +197,19 @@ module.exports = ${this.challengeData.function.name};
 
   async runTests(): Promise<any> {
     this.addLoading("Running tests");
-    const jsonResult = await this.game.runTests(this.currentChallenge);
+    const jsonResult = await this.game.runTests(this.game.currentChallenge);
     this.jsonResult = jsonResult;
     this.removeLoading("Running tests");
     this.dialog.open(ScoreDialogComponent, {
       data: {
-        challengeId: this.currentChallenge
+        challengeId: this.game.currentChallenge
       }
     });
   }
 
   async loadResult() {
     try {
-      const resultFile = await this.webcontainerInstance.fs.readFile(`${this.currentLanguage}/${this.currentChallenge}/result.json`, 'utf-8');
+      const resultFile = await this.webcontainerInstance.fs.readFile(`${this.game.currentLanguage}/${this.game.currentChallenge}/result.json`, 'utf-8');
       console.log(resultFile);
       this.jsonResult = JSON.parse(resultFile);
     } catch (error) {

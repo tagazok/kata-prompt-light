@@ -5,21 +5,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChallengeComponent } from './challenge/challenge.component';
 
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatButtonModule} from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MarkdownModule } from 'ngx-markdown';
 import { HighlightService } from './highlight.service';
 import { TestResultComponent } from './test-result/test-result.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import {MatIconModule} from '@angular/material/icon';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BootstrapDialogComponent } from './bootstrap-dialog/bootstrap-dialog.component';
 import { NewGameDialogComponent } from './new-game-dialog/new-game-dialog.component';
-import {MatInputModule} from '@angular/material/input';
+import { MatInputModule } from '@angular/material/input';
 import { RulesComponent } from './rules/rules.component';
 import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
 import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
@@ -29,6 +29,23 @@ import { LeaderboardDialogComponent } from './leaderboard-dialog/leaderboard-dia
 import { PlaceholderComponent } from './placeholder/placeholder.component';
 import { HomeComponent } from './home/home.component';
 import { GameComponent } from './game/game.component';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { TerminalBottomSheetComponent } from './terminal-bottom-sheet/terminal-bottom-sheet.component';
+
+const materialImports = [
+  FormsModule,
+  ReactiveFormsModule,
+  MatTabsModule,
+  MatButtonModule,
+  BrowserAnimationsModule,
+  MatMenuModule,
+  MatSidenavModule,
+  MatListModule,
+  MatIconModule,
+  MatDialogModule,
+  MatInputModule,
+  MatBottomSheetModule
+];
 
 @NgModule({
   declarations: [
@@ -44,22 +61,13 @@ import { GameComponent } from './game/game.component';
     LeaderboardDialogComponent,
     PlaceholderComponent,
     HomeComponent,
-    GameComponent
+    GameComponent,
+    TerminalBottomSheetComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatTabsModule,
-    MatButtonModule,
-    BrowserAnimationsModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    MatIconModule,
-    MatDialogModule,
-    MatInputModule,
+    ...materialImports,
     MarkdownModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
