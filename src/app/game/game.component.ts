@@ -75,7 +75,7 @@ export class GameComponent {
   }
 
   endGame() {
-
+    this.router.navigate(['/'])
     // const rulesGameDialog = this.dialog.open(RulesDialogComponent);
 
     // rulesGameDialog.afterClosed().subscribe(result => {

@@ -120,6 +120,12 @@ $borders: (
     }
 }
 
+@each $gap in (1, 2, 3, 4, 5, 6, 7, 8, 9) {
+    .gap-#{$gap} {
+        gap: #{$gap}em;
+    }
+}
+
 .no-padding {
     padding: 0 !important;
 }
@@ -130,5 +136,5 @@ $borders: (
 }
 
 .overflow-auto {
-    overflow: auto;
+    overflow: auto !important;
 }

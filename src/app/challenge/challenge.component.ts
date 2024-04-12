@@ -159,11 +159,11 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     this.addLoading("Generating code");
     this.game.stopwatch.pause();
     const bedrockResponse = await this.bedrockService.callClaudeV2(this.generatePrompt());
-    console.log(bedrockResponse.completion);
+    console.log(bedrockResponse);
 
     const regex = /<lc-code>(.*?)<\/lc-code>/s;
     try {
-      let code = bedrockResponse.completion.match(regex)[1];
+      let code = bedrockResponse.match(regex)[1];
       this.proposedCode = code;
       this.game.stopwatch.resume();
 

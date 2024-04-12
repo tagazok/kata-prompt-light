@@ -1,0 +1,12 @@
+{
+    "name": "Integer to Roman",
+    "function": {
+        "name": "intToRoman"
+    },
+    "completionPoints": 80, 
+    "tests": {
+        "3 is III": 20,
+        "58 is LVIII": 20,
+        "1994 is MCMXCIV": 40 
+    }
+}

@@ -2,5 +2,12 @@
     "name": "Division",
     "function": {
         "name": "divide"
+    },
+    "completionPoints": 20,
+    "tests": {
+        "divide 4 / 4 to equal 1": 10,
+        "divide 6 / 2 to equal 3": 10,
+        "divide 3 / -1 to equal -3": 10,
+        "divide 42 / 0 to equal Infinity": 20
     }
 }

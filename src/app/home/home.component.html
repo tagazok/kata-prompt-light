@@ -1,6 +1,11 @@
 <div class="container flex flex-direction-column justify-content-center align-items-center">
-    <app-leaderboard-dialog class="margin-bottom-2"></app-leaderboard-dialog>
+    <div class="title padding-bottom-1">Prompt Challenge</div>
+    <div class="flex flex-diraction-row gap-2">
+        <img src="/assets/rightalot-nobg.png" />
+        <app-leaderboard-dialog class="margin-bottom-2"></app-leaderboard-dialog>
+    </div>
     <div class="flex justify-content-center">
-        <button mat-flat-button color="primary" (click)="newGame()">New game</button>
+        <!-- <button mat-flat-button color="primary" (click)="newGame()">New game</button> -->
+        <button class="button" (click)="newGame()">New game</button>
     </div>
 </div>

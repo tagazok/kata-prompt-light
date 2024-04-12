@@ -2,5 +2,11 @@
     "name": "ROT42",
     "function": {
         "name": "rot42"
+    },
+    "completionPoints": 20,
+    "tests": {
+        "Ciphers the whole alphabet to ROT42, equalling 'NOPQRSTUVWXYZABCDEFGHIJKLM'": 10,
+        "Ciphers 'ABCXYZ' to ROT13, equalling 'NOPKLM'": 10,
+        "Ciphers 'Lorem Ipsum Dolor Sit Amet' to 'Yberz Vcfhz Qbybe Fvg Nzrg' on ROT42": 10
     }
 }

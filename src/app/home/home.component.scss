@@ -1,3 +1,40 @@
 .container {
     height: 100%;
+    width: 100%;
+    overflow: none;
+	position: relative;
+	border: 1px solid black;
+	background: repeating-conic-gradient(at 50% 50%, #41a1ef 0 5.625deg, #67adeb 0 16.875deg, #41a1ef 0 22.5deg); 
+
+    .title {
+        font-size: 5em;
+        text-transform: uppercase;
+        color: #fff;
+        filter: drop-shadow(black 2px 2px 5px);
+    }
+
+    img {
+        height: 600px;
+        width: auto;
+        transform: scaleX(-1);
+        filter: drop-shadow(black 2px 2px 5px);
+    }
+
+    .button {
+        background-color: #3f51b5; /* Green */
+        border: solid 1px #fff;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 3em;
+        border-radius: 4px;
+        cursor: pointer;
+        text-transform: uppercase;
+
+        &:hover {
+            background-color: #3848a1;
+        }
+      }
 }

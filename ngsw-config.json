@@ -14,6 +14,7 @@
           "/*.js",
           "https://w-corp.staticblitz.com/*",
           "https://nr.staticblitz.com/*",
+          "https://c.staticblitz.com/*",
           "https://fonts.gstatic.com/*"
         ]
       }
