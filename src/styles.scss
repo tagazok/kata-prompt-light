@@ -1,55 +1,160 @@
-@font-face {
-    font-family: 'Menlo Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: local('Menlo Regular'), url('./assets/Menlo-Regular.woff') format('woff');
-}
+// @font-face {
+//     font-family: 'Menlo Regular';
+//     font-style: normal;
+//     font-weight: normal;
+//     src: local('Menlo Regular'), url('./assets/Menlo-Regular.woff') format('woff');
+// }
 
-* {
-    box-sizing: border-box;
-}
+// * {
+//     box-sizing: border-box;
+// }
+
+// // :root {
+// //     --main-bg-color: #1a1a1a;
+// //     --main-text-color: #fff;
+
+
+// //     --bloc-content-bg-color: #282828;
+// //     --bloc-content-hf-bg-color: #353535;
+// //     --bloc-content-hf-border-color: #4c4c4c;
+// //     --bloc-content-border-color: #4d4d4d;
+
+
+// // }
+
+
 
 // :root {
-//     --main-bg-color: #1a1a1a;
-//     --main-text-color: #fff;
+//     --main-bg-color: #fff;
+//     --main-text-color: #17113a;
+//     --secondary-text-color: rgb(138, 138, 138);  //hsl(from var(var(--main-text-color) h s 80%));
+//     --bloc-content-bg-color: #fafcfd;
+//     --bloc-content-hf-bg-color: #fff;
+//     --bloc-content-hf-border-color: #e9e9e9;
+//     --bloc-content-border-color: #e0e0e0;
+// }
 
 
-//     --bloc-content-bg-color: #282828;
-//     --bloc-content-hf-bg-color: #353535;
-//     --bloc-content-hf-border-color: #4c4c4c;
-//     --bloc-content-border-color: #4d4d4d;
+// body {
+//     margin: 0;
+//     height: 100vh;
+//     background-color: var(--main-bg-color);
+//     color: var(--main-text-color);
+// }
+
+// html,
+// body {
+//     height: 100%;
+// }
+
+// body {
+//     margin: 0;
+//     font-family: Roboto, "Helvetica Neue", sans-serif;
+// }
+
+// pre {
+//     margin: 0 !important;
+//     border-radius: 0 !important;
+// }
+
+// .code pre {
+//     height: 100%;
+// }
+
+// .problem pre {
+//     font-size: .8em !important;
+// }
+
+// pre code, .export, .prompt {
+//     font-family: 'Menlo Regular' !important;
+// }
 
 
+// .cdk-overlay-dark-backdrop {
+//     background: rgba(0,0,0,.72);
 // }
 
 
 
-:root {
-    --main-bg-color: #fff;
-    --main-text-color: #17113a;
-    --secondary-text-color: rgb(138, 138, 138);  //hsl(from var(var(--main-text-color) h s 80%));
-    --bloc-content-bg-color: #fafcfd;
-    --bloc-content-hf-bg-color: #fff;
-    --bloc-content-hf-border-color: #e9e9e9;
-    --bloc-content-border-color: #e0e0e0;
-}
+// .lds-ring {
+//     // display: inline-block;
+//     // position: relative;
+//     width: 30px;
+//     height: 30px;
+// }
+
+// .lds-ring div {
+//     box-sizing: border-box;
+//     display: block;
+//     position: absolute;
+//     width: 25px;
+//     height: 25px;
+//     // margin: 4px;
+//     border: 3px solid #3f3f3f;
+//     border-radius: 50%;
+//     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+//     border-color: #5c5c5c transparent transparent transparent;
+// }
+
+// .lds-ring div:nth-child(1) {
+//     animation-delay: -0.45s;
+// }
+
+// .lds-ring div:nth-child(2) {
+//     animation-delay: -0.3s;
+// }
+
+// .lds-ring div:nth-child(3) {
+//     animation-delay: -0.15s;
+// }
+
+// .enonce {
+//     pre:has(code) {
+//         border-radius: 4px !important;
+//     }
+// }
+
+// @keyframes lds-ring {
+//     0% {
+//         transform: rotate(0deg);
+//     }
+
+//     100% {
+//         transform: rotate(360deg);
+//     }
+// }
 
 
-body {
-    margin: 0;
-    height: 100vh;
-    background-color: var(--main-bg-color);
-    color: var(--main-text-color);
-}
-
+/* You can add global styles to this file, and also import other style files */
 html,
 body {
-    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+:root {
+    --code-editor-header: #323232;
+    --code-editor-body: #1e1e1e;
+    --code-editor-footer: #41433a;
+    --code-editor-footer-hover: #51534c;
+    --code-editor-default-text: #e6e6e6;
+    --code-editor-separator: #444444;
+    --code-editor-tab-label: #d7bd90;
+    --q-background: #252526;
 }
 
 body {
-    margin: 0;
-    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background: linear-gradient(-45deg, #faedcb, #c9e4de, #c6def1, #f2c6de);
+    background-size: 400% 400%;
+    animation: gradient 8s ease infinite;
+
+    background: #0D0208;
+    color: #00FF41;
+}
+
+pre[class*=language-] {
+    background: transparent !important;
+    padding: 0 !important;
 }
 
 pre {
@@ -61,66 +166,36 @@ pre {
     height: 100%;
 }
 
-.problem pre {
-    font-size: .8em !important;
-}
-
-pre code, .export, .prompt {
+pre code,
+.export,
+.prompt {
     font-family: 'Menlo Regular' !important;
 }
 
-
-.cdk-overlay-dark-backdrop {
-    background: rgba(0,0,0,.72);
-}
-
-
-
-.lds-ring {
-    // display: inline-block;
-    // position: relative;
-    width: 30px;
-    height: 30px;
-}
-
-.lds-ring div {
-    box-sizing: border-box;
-    display: block;
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    // margin: 4px;
-    border: 3px solid #3f3f3f;
-    border-radius: 50%;
-    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-    border-color: #5c5c5c transparent transparent transparent;
-}
-
-.lds-ring div:nth-child(1) {
-    animation-delay: -0.45s;
-}
-
-.lds-ring div:nth-child(2) {
-    animation-delay: -0.3s;
-}
-
-.lds-ring div:nth-child(3) {
-    animation-delay: -0.15s;
-}
-
-.enonce {
-    pre:has(code) {
-        border-radius: 4px !important;
-    }
-}
-
-@keyframes lds-ring {
+@keyframes gradient {
     0% {
-        transform: rotate(0deg);
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
     }
 
     100% {
-        transform: rotate(360deg);
+        background-position: 0% 50%;
     }
 }
 
+
+.challenge-description, .chat {
+    p {
+        margin: 0 !important;
+    }
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.my-dialog .mat-mdc-dialog-surface {
+    background-color: transparent !important;
+}

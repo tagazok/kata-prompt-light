@@ -31,6 +31,9 @@ import { HomeComponent } from './home/home.component';
 import { GameComponent } from './game/game.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { TerminalBottomSheetComponent } from './terminal-bottom-sheet/terminal-bottom-sheet.component';
+import { FinishTrainingDialogComponent } from './finish-training-dialog/finish-training-dialog.component';
+import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
+import { LoadingScreenStateService } from './loading-screen-state.service';
 
 const materialImports = [
   FormsModule,
@@ -62,7 +65,9 @@ const materialImports = [
     PlaceholderComponent,
     HomeComponent,
     GameComponent,
-    TerminalBottomSheetComponent
+    TerminalBottomSheetComponent,
+    FinishTrainingDialogComponent,
+    LoadingScreenComponent
   ],
   imports: [
     BrowserModule,
@@ -77,7 +82,8 @@ const materialImports = [
     })
   ],
   providers: [
-    HighlightService
+    HighlightService,
+    LoadingScreenStateService
   ],
   bootstrap: [AppComponent]
 })

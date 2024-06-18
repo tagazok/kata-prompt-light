@@ -16,38 +16,38 @@ import { TerminalBottomSheetComponent } from '../terminal-bottom-sheet/terminal-
 })
 export class GameComponent {
 
-  bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
+  // bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
   loading: boolean = true;
 
   constructor(
     public game: GameService,
     private router: Router,
     public dialog: MatDialog,
-    private TerminalBottomSheet: MatBottomSheet
+    // private TerminalBottomSheet: MatBottomSheet
   ) {
     // router.events.subscribe((routerEvent: any) => {
     //   if (routerEvent.url?.startsWith("/challenge/")) {
     //     this.checkRouterEvent(routerEvent);
     //   }
     // });
-    this.initContainer();
+    // this.initContainer();
   }
 
-  showTerminal() {
-    this.TerminalBottomSheet.open(TerminalBottomSheetComponent);
-  }
+  // showTerminal() {
+  //   this.TerminalBottomSheet.open(TerminalBottomSheetComponent);
+  // }
 
-  async initContainer() {
-    if (!this.game.webcontainerInstance) {
-      this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
-        data: {
-          bootstrapSteps: this.game.bootstrapSteps
-        }
-      });
-      await this.game.initContainer();
-      this.bootstrapDialog?.close();
-    }
-  }
+  // async initContainer() {
+  //   if (!this.game.webcontainerInstance) {
+  //     this.bootstrapDialog = this.dialog.open(BootstrapDialogComponent, {
+  //       data: {
+  //         bootstrapSteps: this.game.bootstrapSteps
+  //       }
+  //     });
+  //     await this.game.initContainer();
+  //     this.bootstrapDialog?.close();
+  //   }
+  // }
 
   // checkRouterEvent(routerEvent: any): void {
   //   if (routerEvent instanceof NavigationStart) {
@@ -67,7 +67,9 @@ export class GameComponent {
   // }
 
   showRules() {
-    this.dialog.open(RulesDialogComponent);
+    this.dialog.open(RulesDialogComponent, {
+      panelClass: ['my-dialog']
+    });
   }
 
   openLeaderBoardDialog() {

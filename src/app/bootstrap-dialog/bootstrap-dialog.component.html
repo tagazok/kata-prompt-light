@@ -1,17 +1,17 @@
-<div class="padding-3 container">
+<div class="padding-3 container flex flex-direction-row">
   <app-loading-cube></app-loading-cube>
-  <div class="title margin-bottom-2">Ready to play?</div>
-  <div class="steps">
-    <div class="step flex flex-direction-row" [ngClass]="data.bootstrapSteps.bootwebcontainer">
-      <mat-icon inline=true>{{data.bootstrapSteps.bootwebcontainer}}</mat-icon>
+  <div class="steps flex flex-direction-column justify-content-center">
+    <div class="title margin-bottom-2">Ready to play?</div>
+    <div class="step flex flex-direction-row" [ngClass]="gameService.bootstrapSteps.bootwebcontainer">
+      <mat-icon inline=true>{{gameService.bootstrapSteps.bootwebcontainer}}</mat-icon>
       <div class="flex align-items-center">Booting WebContainer</div>
     </div>
-    <div class="step flex flex-direction-row" [ngClass]="data.bootstrapSteps.mountwebcontainer">
-      <mat-icon inline=true>{{data.bootstrapSteps.mountwebcontainer}}</mat-icon>
+    <div class="step flex flex-direction-row" [ngClass]="gameService.bootstrapSteps.mountwebcontainer">
+      <mat-icon inline=true>{{gameService.bootstrapSteps.mountwebcontainer}}</mat-icon>
       <div class="flex align-items-center">Mounting WebContainer</div>
     </div>
-    <div class="step flex flex-direction-row" [ngClass]="data.bootstrapSteps.installdependancies">
-      <mat-icon inline=true>{{data.bootstrapSteps.installdependancies}}</mat-icon>
+    <div class="step flex flex-direction-row" [ngClass]="gameService.bootstrapSteps.installdependancies">
+      <mat-icon inline=true>{{gameService.bootstrapSteps.installdependancies}}</mat-icon>
       <div class="flex align-items-center">Installing Dependencies</div>
     </div>
   </div>

@@ -28,9 +28,9 @@ export class NewGameDialogComponent {
       await this.game.newGame(this.newGameFormGroup.value.userNameFormControl);
 
       this.dialogRef.close();
-      this.router.navigate(['/game', this.game.game.id])
+      this.router.navigate(['/game', this.game.game.id, 'challenge', 'training'])
     } catch (error) {
-      
+      console.log('[new-game-dialog] newGame() ', error)
     }
   }
 }

@@ -1,7 +1,0 @@
-type Game @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  user: String! 
-  score: Int!
-  completedChallenges: [String]
-  event: String! @index(name: "byScore", queryField: "usersByScore", sortKeyFields: ["score"])
-}

@@ -1,0 +1,47 @@
+:host {
+    // --bg-color: rgba(0, 150, 205, 1);
+    // --border-color: #02c6f7;
+
+
+    --bg-color: rgba(0, 153, 76, 1);
+    --border-color: #6cdb9c;
+}
+.outline {
+    background-color: var(--border-color);
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.container-score {
+
+
+    // background-color: #0096cd;
+    background: rgb(0, 150, 205);
+    background: linear-gradient(319deg, var(--bg-color) 54%, rgba(255, 255, 255, 1) 100%);
+    color: #fff;
+    box-shadow: inset 1px 1px 2px rgba(0 0 0 / 50%);
+    border-radius: 20px;
+    text-align: center;
+
+    & .header {
+        background-color: rgba(0 0 0 / 50%);
+        padding: 1rem 2rem;
+        border-radius: 20px 20px 0 0;
+        font-size: 2.5em;
+    }
+
+    & .body {
+        padding: 1em;
+
+
+        & .label-score {
+            font-weight: bold;
+            font-size: 2em;
+            padding: 1em;
+        }
+    }
+
+    & .footer {
+        padding: 0 0 1em 0;
+    }
+}

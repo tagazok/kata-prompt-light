@@ -15,7 +15,15 @@ import { Subscription, timer } from 'rxjs';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { ScoreDialogComponent } from '../score-dialog/score-dialog.component';
 import { LeaderboardDialogComponent } from '../leaderboard-dialog/leaderboard-dialog.component';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { TerminalBottomSheetComponent } from '../terminal-bottom-sheet/terminal-bottom-sheet.component';
+import { FinishTrainingDialogComponent } from '../finish-training-dialog/finish-training-dialog.component';
 
+
+export interface ChatItem {
+  role: string,
+  content: string
+};
 
 @Component({
   selector: 'app-challenge',
@@ -41,7 +49,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   challengeData: any = {};
   challenges: any;
   availableLanguages = ['javascript', 'python'];
-  // challengesData: any = {};
+
   bootstrapSteps: any = {
     bootwebcontainer: "radio_button_unchecked",
     mountwebcontainer: "radio_button_unchecked",
@@ -49,171 +57,169 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   };
   timerRef: any;
 
+  chatItems: ChatItem[] = [];
+  loading: boolean = false;
+  showConsole: boolean = false;
+
   newMessageFormGroup = new UntypedFormGroup({
     promptFormControl: new UntypedFormControl('', [Validators.required])
   });
+  challenge: any;
 
-  currentChallengePath: any;
 
   constructor(
     private bedrockService: BedrockService,
     private route: ActivatedRoute,
     private router: Router,
     public game: GameService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private TerminalBottomSheet: MatBottomSheet
   ) {
     this.proposedCode = "";
     this.loadingActivities = new Set();
   }
 
-  updateCurrentChallenge() {
+  updateCurrentChallenge(challengeRef: string) {
+  
     console.log(this.game.challenges);
-    console.log(this.game.currentChallenge);
-    console.log(this.game.challenges[this.game.currentLanguage]);
-    this.currentChallengePath = this.game.challenges[this.game.currentLanguage].directory[this.game.currentChallenge].directory;
-    this.tests = this.currentChallengePath['test.js'].file.contents;
+    console.log(this.game.currentChallengeRef);
+    this.game.currentChallengeRef = challengeRef;
 
-    this.challengeData = this.game.challengesData[this.game.currentChallenge]
-    this.challengeDescription = this.currentChallengePath['challenge.txt'].file.contents;
+    this.challenge = this.game.loadChallenge(challengeRef);
 
     this.proposedCode = "";
     this.newMessageFormGroup.reset();
     this.jsonResult = {};
     this.numberofLinesInPromptInput = [0, 1];
-
+    this.chatItems = [];
+    this.showConsole = false;
     this.game.startChallenge();
   }
 
   ngOnInit() {
-
+    // this.updateCurrentChallenge();
     this.route.params.subscribe(routeParams => {
-      this.game.currentChallenge = routeParams['challengeId'] || "";
-      this.updateCurrentChallenge();
+      // this.game.currentChallengeRef = routeParams['challengeId'] || "";
+  
+      this.updateCurrentChallenge(routeParams['challengeId'] || "");
+      
     });
-    
-    
 
-    // this.route.queryParams
-    //   .subscribe(params => {
-    //     console.log(params);
-    //     if (params['language'] && this.availableLanguages.includes(params['language'])) {
-    //       this.currentLanguage = params['language'];
-    //     }
-
-    //     if (params['challengeId']) {
-    //       this.currentChallenge = params['challengeId'];
-    //     }
-    //     this.updateCurrentChallenge();
-    //   }
-    //   );
-    // this.init();
-    this.initGame();
-
-  }
-
-
-  async initGame() {
-    // await this.game.initContainer();
-    if (!this.game.game) {
-      // this.newGame();
-    };
-    // this.bootstrapDialog?.close();
-  }
-
-  ngAfterViewInit() {
-    this.initialPromptInputHeight = this.promptInput.nativeElement.scrollHeight;
-
-    if (this.terminalEl) {
-      // this.terminal.open(this.terminalEl.nativeElement);
-      // this.game.startShell();
-      this.game.terminal.open(this.terminalEl.nativeElement);
-    }
-
-  }
-
-  addLoading(operation: string) {
-    this.loadingActivities.add(operation);
-  }
-
-  removeLoading(operation: string) {
-    this.loadingActivities.delete(operation);
-  }
-
-  generatePrompt() {
-
-    let input = `
-    The generated code should be in ${this.game.currentLanguage}.
-    `
-
-    // Write a function in JavaScript called "sum" that takes 2 parameters and returns their sum
-    input += this.newMessageFormGroup.value.promptFormControl;
-    const prompt = `
-    ${input}
-      In your reponse, put the code of the function between the <lc-code></lc-code> xml tags
-    `;
-
-    return prompt;
   }
 
   async generateCode() {
-    this.addLoading("Generating code");
+    this.loading = true;
+
+    this.chatItems.push({
+      role: "human",
+      content: this.newMessageFormGroup.value.promptFormControl || "",
+    });
+
     this.game.stopwatch.pause();
-    const bedrockResponse = await this.bedrockService.callClaudeV2(this.generatePrompt());
+    const bedrockResponse = await this.bedrockService.callClaudeV2(this.newMessageFormGroup.value.promptFormControl);
     console.log(bedrockResponse);
 
-    const regex = /<lc-code>(.*?)<\/lc-code>/s;
+
+    this.chatItems.push({
+      role: "bot",
+      content: bedrockResponse.replace(/<lc-code>.*?<\/lc-code>/s, ""),
+    });
+
     try {
-      let code = bedrockResponse.match(regex)[1];
-      this.proposedCode = code;
+      const regex = /<lc-code>(.*?)<\/lc-code>/s;
+      
+      let code = bedrockResponse?.match(regex)?.[1] || "";
       this.game.stopwatch.resume();
 
       code += `
-module.exports = ${this.challengeData.function.name};
+module.exports = ${this.challenge.data.function.name};
       `;
+
       console.log(code);
-      // this.zone.run(() => {
 
-      // this.currentChallengePath['app.js'] = {
-      //   file: {
-      //     contents: code
-      //   }
-      // }
-      // await this.webcontainerInstance.mount(files);
+      this.proposedCode = code;
 
-      const path = `/${this.game.currentLanguage}/${this.game.currentChallenge}/app.js`
-      // await this.webcontainerInstance.fs.writeFile(path, code);
+      const path = `/javascript/${this.challenge.id}/app.js`
       this.game.saveCode(path, code);
 
-      // });
     } catch (error) {
-      // this.proposedCode = error;
+      this.proposedCode = String(error);
       console.log(error);
     } finally {
-      // console.log(this.challenges['app.js']);
-
-      this.removeLoading("Generating code");
+      this.loading = false;
     }
   }
 
   async runTests(): Promise<any> {
-    this.addLoading("Running tests");
-    const jsonResult = await this.game.runTests(this.game.currentChallenge);
+
+    this.showConsole = true;
+    
+    this.loading = true;
+    const jsonResult = await this.game.runTests(this.challenge.id);
     this.jsonResult = jsonResult;
-    this.removeLoading("Running tests");
-    this.dialog.open(ScoreDialogComponent, {
-      data: {
-        challengeId: this.game.currentChallenge
-      }
-    });
+  
+    this.loading = false;
+
+    if (jsonResult.success) {
+      if (this.game.currentChallengeRef === "training") {
+        this.dialog.open(FinishTrainingDialogComponent, {
+          panelClass: ['my-dialog']
+        }).afterClosed().subscribe(result => {
+          console.log('The dialog was closed');
+          if (result) {
+            this.game.currentChallengeRef = "compete";
+        
+            this.router.navigate(['../challenge', 'compete'], { relativeTo: this.route })
+      
+          } else {
+            this.router.navigate(['/'])
+            // TODO: Print "See you soon" and reinit training
+          }
+        });
+
+      } 
+      // else {
+      //   this.dialog.open(ScoreDialogComponent, {
+      //     data: {
+      //       challengeRef: 'compete',
+      //       testsData: jsonResult
+      //     },
+      //     panelClass: ['my-dialog']
+      //   });
+      // }
+    }
+    if (this.game.currentChallengeRef === "compete") {
+      this.dialog.open(ScoreDialogComponent, {
+        data: {
+          challengeRef: 'compete',
+          testsData: jsonResult
+        },
+        panelClass: ['my-dialog']
+      });
+    }
   }
 
   async loadResult() {
     try {
-      const resultFile = await this.webcontainerInstance.fs.readFile(`${this.game.currentLanguage}/${this.game.currentChallenge}/result.json`, 'utf-8');
+      const resultFile = await this.webcontainerInstance.fs.readFile(`${this.game.currentLanguage}/${this.game.currentChallengeRef}/result.json`, 'utf-8');
       console.log(resultFile);
       this.jsonResult = JSON.parse(resultFile);
     } catch (error) {
 
+    }
+  }
+
+  showTerminal() {
+    this.showConsole = !this.showConsole;
+    // if (this.terminalEl) {
+      // this.terminal.open(this.terminalEl.nativeElement);
+      // this.game.startShell();
+      // this.game.terminal.open(this.terminalEl.nativeElement);
+    // }
+  }
+  ngAfterViewInit() {
+    if (this.terminalEl) {
+      this.game.terminal.open(this.terminalEl.nativeElement);
     }
   }
 
@@ -223,5 +229,12 @@ module.exports = ${this.challengeData.function.name};
     const nbLines = Math.round(this.promptInput.nativeElement.scrollHeight / 18);
 
     this.numberofLinesInPromptInput = Array(nbLines).fill(0).map((x, i) => i);
+  }
+
+  onInputKeyDown(e: any) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      this.generateCode();
+    }
   }
 }

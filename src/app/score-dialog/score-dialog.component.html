@@ -33,14 +33,14 @@
             <div class="value">{{this.game.game.score}}</div>
 
             <div class="margin-bottom-1"></div>
-
-            <div class="full-width">
+            <div class="full-width" *ngIf="!data.testsData.success">
                 You still have some tests that failed. Try to adjust your prompt.
             </div>
             <div class="margin-bottom-1"></div>
 
-            <div class="flex justify-content-center full-width">
-                <button mat-flat-button mat-dialog-close [disabled]="disableClose">CONTINUE</button>
+            <div class="flex justify-content-space-around full-width">
+                <button mat-flat-button (click)="retry()" [disabled]="disableClose" *ngIf="!data.testsData.success">RETRY</button>
+                <button mat-flat-button (click)="finishGame()" [disabled]="disableClose">FINISH</button>
             </div>
         </div>
     </div>

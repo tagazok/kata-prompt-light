@@ -6,7 +6,7 @@
         <div class="header value">SCORE</div>
         <ng-container *ngFor="let user of leaders; let index = index">
             <div class="rank">
-                <div class="circle rank{{index + 1}}">{{index + 1}}</div>
+                <div class="circle flex justify-content-center align-items-center rank{{index + 1}}">{{index + 1}}</div>
             </div>
             <div class="label">{{user.user}}</div>
             <div class="value">{{user.score}}</div>

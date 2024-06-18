@@ -10,7 +10,7 @@ import { gameResolver } from './game.resolver';
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'game',
@@ -19,12 +19,12 @@ const routes: Routes = [
   {
     path: 'game/:id',
     component: GameComponent,
-    // resolve: { resolver: webcontainersResolver },
-    resolve: { resolver: gameResolver},
+    // resolve: { resolver: gameResolver},
+    resolve: { resolver: webcontainersResolver },
     children: [
       {
         path: '',
-        component: PlaceholderComponent
+        component: PlaceholderComponent,
       },
       {
         path: 'challenge',
@@ -32,7 +32,7 @@ const routes: Routes = [
       },
       { 
         path: 'challenge/:challengeId', 
-        component: ChallengeComponent
+        component: ChallengeComponent,
       }
     ]
   }
