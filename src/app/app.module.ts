@@ -9,8 +9,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import { MarkdownModule } from 'ngx-markdown';
-import { HighlightService } from './highlight.service';
-import { TestResultComponent } from './test-result/test-result.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -26,11 +24,9 @@ import { ScoreDialogComponent } from './score-dialog/score-dialog.component';
 import { LoadingCubeComponent } from './loading-cube/loading-cube.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { LeaderboardDialogComponent } from './leaderboard-dialog/leaderboard-dialog.component';
-import { PlaceholderComponent } from './placeholder/placeholder.component';
 import { HomeComponent } from './home/home.component';
 import { GameComponent } from './game/game.component';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { TerminalBottomSheetComponent } from './terminal-bottom-sheet/terminal-bottom-sheet.component';
 import { FinishTrainingDialogComponent } from './finish-training-dialog/finish-training-dialog.component';
 import { LoadingScreenComponent } from './loading-screen/loading-screen.component';
 import { LoadingScreenStateService } from './loading-screen-state.service';
@@ -54,7 +50,6 @@ const materialImports = [
   declarations: [
     AppComponent,
     ChallengeComponent,
-    TestResultComponent,
     BootstrapDialogComponent,
     NewGameDialogComponent,
     RulesComponent,
@@ -62,10 +57,8 @@ const materialImports = [
     ScoreDialogComponent,
     LoadingCubeComponent,
     LeaderboardDialogComponent,
-    PlaceholderComponent,
     HomeComponent,
     GameComponent,
-    TerminalBottomSheetComponent,
     FinishTrainingDialogComponent,
     LoadingScreenComponent
   ],
@@ -82,7 +75,6 @@ const materialImports = [
     })
   ],
   providers: [
-    HighlightService,
     LoadingScreenStateService
   ],
   bootstrap: [AppComponent]

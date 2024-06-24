@@ -13,25 +13,3 @@
     opacity: 1;
     background: repeating-conic-gradient(at 50% 50%, #151515 0 5.625deg, #212121 0 16.875deg, #151515 0 22.5deg);
 }
-
-// .loading-text {
-//     position: relative;
-//     color: rgba(0, 0, 0, 0.3);
-//     font-size: 5em;
-// }
-
-// .loading-text:before {
-//     content: attr(data-text);
-//     position: absolute;
-//     overflow: hidden;
-//     max-width: 7em;
-//     white-space: nowrap;
-//     color: #fff;
-//     animation: loading 8s linear;
-// }
-
-// @keyframes loading {
-//     0% {
-//         max-width: 0;
-//     }
-// }

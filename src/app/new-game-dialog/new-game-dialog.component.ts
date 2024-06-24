@@ -18,17 +18,13 @@ export class NewGameDialogComponent {
     private game: GameService,
     private router: Router,
     private dialogRef: MatDialogRef<NewGameDialogComponent>
-  ) {
-    // if (!this.game.game) {
-    //   this.dialogRef.disableClose = true;
-    // }
-  }
+  ) {}
   async newGame() {
     try {
       await this.game.newGame(this.newGameFormGroup.value.userNameFormControl);
 
       this.dialogRef.close();
-      this.router.navigate(['/game', this.game.game.id, 'challenge', 'training'])
+      this.router.navigate(['/game', this.game.game?.id, 'challenge', 'training'])
     } catch (error) {
       console.log('[new-game-dialog] newGame() ', error)
     }

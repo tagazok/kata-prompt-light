@@ -7,8 +7,6 @@ import { Subject, Subscription } from 'rxjs';
 export class LoadingScreenStateService {
   subject = new Subject();
 
-  constructor() { }
-
   subscribe(onNext: any): Subscription {
     return this.subject.subscribe(onNext);
  }
@@ -16,7 +14,7 @@ export class LoadingScreenStateService {
  start() {
     this.subject.next(true);
  }
- 
+
  stop() {
     this.subject.next(false);
  }

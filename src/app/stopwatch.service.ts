@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { timer, BehaviorSubject, Observable } from 'rxjs';
-import { map, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +13,6 @@ export class StopwatchService {
 
   start() {
     this.stop();
-    // this.interval = setInterval(this.incrementCounter.bind(this), 1000);
     this.interval = setInterval(() => this.incrementCounter(), 1000);
   }
 

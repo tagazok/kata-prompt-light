@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ChallengeComponent } from './challenge/challenge.component';
 import { webcontainersResolver } from './webcontainers.resolver';
-import { PlaceholderComponent } from './placeholder/placeholder.component';
 import { HomeComponent } from './home/home.component';
 import { GameComponent } from './game/game.component';
-import { gameResolver } from './game.resolver';
 
 const routes: Routes = [
   {
@@ -19,12 +17,12 @@ const routes: Routes = [
   {
     path: 'game/:id',
     component: GameComponent,
-    // resolve: { resolver: gameResolver},
     resolve: { resolver: webcontainersResolver },
     children: [
       {
         path: '',
-        component: PlaceholderComponent,
+        redirectTo: '/',
+        pathMatch: 'full'
       },
       {
         path: 'challenge',

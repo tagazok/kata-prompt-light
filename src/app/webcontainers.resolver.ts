@@ -1,11 +1,10 @@
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
-import { WebcontainerService } from './webcontainer.service';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { GameService } from './game.service';
 import { LoadingScreenStateService } from './loading-screen-state.service';
 import { of } from 'rxjs';
 
-export const webcontainersResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+export const webcontainersResolver: ResolveFn<any> = (route: ActivatedRouteSnapshot) => {
   const game = inject(GameService);
   const loadingScreenService = inject(LoadingScreenStateService)
 
@@ -16,7 +15,7 @@ export const webcontainersResolver: ResolveFn<any> = (route: ActivatedRouteSnaps
     game.getGame(route.params['id']);
   }
 
-  const webcontainerPromise = new Promise((resolve, reject) => {
+  const webcontainerPromise = new Promise((resolve) => {
     if (!game.webcontainerInstance) {
       game.initContainer().then(() => {
         resolve(true);
@@ -32,15 +31,4 @@ export const webcontainersResolver: ResolveFn<any> = (route: ActivatedRouteSnaps
     loadingScreenService.stop();
     return of(true);
   })
-
-  // return new Promise((resolve, reject) => {
-  //   if (!game.webcontainerInstance) {
-  //     game.initContainer().then(() => {
-  //       loadingScreenService.stop();
-  //       resolve(true);
-  //     });
-  //   } else {
-  //     resolve(true);
-  //   }
-  // });
 };

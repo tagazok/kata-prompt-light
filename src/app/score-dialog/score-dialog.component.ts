@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { GameService } from '../game.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Tests } from 'src/types';
 
 @Component({
   selector: 'app-score-dialog',
@@ -15,22 +16,23 @@ export class ScoreDialogComponent {
     challenge: 0,
     total: 0,
   };
-  disableClose: boolean = true;
+  disableClose = true;
 
   constructor(
     public game: GameService,
     private dialogRef: MatDialogRef<ScoreDialogComponent>,
     private router: Router,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: Tests
   ) {
     this.dialogRef.disableClose = true;
+
     console.log(this.data)
 
     this.calculateScore();
   }
 
   async calculateScore() {
-    this.game.game.score = 0;
+    this.game.game!.score = 0;
     const scoreData = await this.game.getScore(this.data.challengeRef, this.data.testsData);
  
     // this.scoreData.total = this.game.game.score + scoreData.tests + scoreData.timeBonus;
@@ -54,12 +56,12 @@ export class ScoreDialogComponent {
                 // Total score
  
                 const totalInterval = setInterval(() => {
-                  if (this.game.game.score === this.scoreData.total) {
+                  if (this.game.game!.score === this.scoreData.total) {
                     clearInterval(totalInterval);
                     this.game.saveGame(this.scoreData.total);
                     this.disableClose = false;
                   } else {
-                    this.game.game.score++
+                    this.game.game!.score++
                   }
                 }, 30);
               } else {

@@ -21,7 +21,7 @@ export class HomeComponent {
       panelClass: ['my-dialog']
     });
 
-    rulesGameDialog.afterClosed().subscribe(result => {
+    rulesGameDialog.afterClosed().subscribe(() => {
       this.dialog.open(NewGameDialogComponent, {
         panelClass: ['my-dialog']
       });

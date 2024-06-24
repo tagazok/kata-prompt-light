@@ -1,5 +1,4 @@
 <div class="padding-1 prompt">
-    <!-- <h1>SCORE</h1> -->
     <div class="prompt padding-1">
         <div class="results">
             <div class="full-width">
@@ -14,8 +13,8 @@
                 </pre>
             </div>
             <div class="full-width margin-bottom-1">
-                <span class="shell">[{{game.game.user}}@localhost ~]$</span> ./run-score --challenge
-                {{data.challengeId}}
+                <span class="shell">[{{game.game?.user}}@localhost ~]$</span> ./run-score --challenge
+                {{data?.challengeRef}}
             </div>
 
             <div class="label">Challenge</div>
@@ -30,7 +29,7 @@
             <div class="margin-bottom-1"></div>
 
             <div class="label">TOTAL</div>
-            <div class="value">{{this.game.game.score}}</div>
+            <div class="value">{{this.game.game?.score}}</div>
 
             <div class="margin-bottom-1"></div>
             <div class="full-width" *ngIf="!data.testsData.success">

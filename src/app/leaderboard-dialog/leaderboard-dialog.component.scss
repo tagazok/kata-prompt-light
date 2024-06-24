@@ -2,28 +2,36 @@
     background-color: #272822;
     color: #fff;
     border-radius: 4px;
-    // font-size: 1.5em;
-    border: solid 1px #94a349;
     width: 400px;
     overflow: hidden;
-    
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+
     .title {
         font-size: 3em;
         text-transform: uppercase;
         text-align: center;
         border-bottom: 1px #94a349 dashed;
-        padding-bottom: 1rem;
+        padding: 1rem;
     }
 
+    .leads {
+        flex: 1;
+        overflow-y: auto;
+    }
     .results {
         display: grid;
         grid-template-columns: auto 1fr auto;
         grid-gap: 16px;
         column-gap: 1.5em;
+        padding: 1rem;
+        
 
         .header {
             margin-bottom: .7rem;
         }
+
         &:not(pre) {
             font-size: 1.2em;
         }

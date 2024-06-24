@@ -1,29 +1,15 @@
-import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Terminal } from 'xterm'
-// import 'xterm/css/xterm.css';
-import { WebContainer } from '@webcontainer/api';
-import { files } from '../../assets/files';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { BedrockService } from '../bedrock.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { BootstrapDialogComponent } from '../bootstrap-dialog/bootstrap-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { GameService } from '../game.service';
-import { NewGameDialogComponent } from '../new-game-dialog/new-game-dialog.component';
-import { Subscription, timer } from 'rxjs';
 import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 import { ScoreDialogComponent } from '../score-dialog/score-dialog.component';
-import { LeaderboardDialogComponent } from '../leaderboard-dialog/leaderboard-dialog.component';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { TerminalBottomSheetComponent } from '../terminal-bottom-sheet/terminal-bottom-sheet.component';
 import { FinishTrainingDialogComponent } from '../finish-training-dialog/finish-training-dialog.component';
-
-
-export interface ChatItem {
-  role: string,
-  content: string
-};
+import { ChatItem } from 'src/types';
 
 @Component({
   selector: 'app-challenge',
@@ -35,31 +21,23 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   @ViewChild('promptInput') promptInput: any;
   @ViewChild('challengesListDrawer') challengesListDrawer?: MatSidenav;
 
-  initialPromptInputHeight: number = 0;
+  initialPromptInputHeight = 0;
   numberofLinesInPromptInput: Array<number> = [0, 1];
-  environmentReady: boolean = false;
+  environmentReady = false;
   webcontainerInstance: any;
-  // terminal: Terminal;
   tests: any;
   proposedCode: string;
   loadingActivities: Set<string> = new Set("Booting webcontainer");
-  // bootstrapDialog?: MatDialogRef<BootstrapDialogComponent>;
   jsonResult = {};
   challengeDescription = "";
-  challengeData: any = {};
-  challenges: any;
+  challengeData = {};
   availableLanguages = ['javascript', 'python'];
 
-  bootstrapSteps: any = {
-    bootwebcontainer: "radio_button_unchecked",
-    mountwebcontainer: "radio_button_unchecked",
-    installdependancies: "radio_button_unchecked"
-  };
   timerRef: any;
 
   chatItems: ChatItem[] = [];
-  loading: boolean = false;
-  showConsole: boolean = false;
+  loading = false;
+  showConsole = false;
 
   newMessageFormGroup = new UntypedFormGroup({
     promptFormControl: new UntypedFormControl('', [Validators.required])
@@ -85,7 +63,7 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
     console.log(this.game.currentChallengeRef);
     this.game.currentChallengeRef = challengeRef;
 
-    this.challenge = this.game.loadChallenge(challengeRef);
+    this.challenge = this.game.loadChallenge();
 
     this.proposedCode = "";
     this.newMessageFormGroup.reset();
@@ -97,12 +75,8 @@ export class ChallengeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    // this.updateCurrentChallenge();
     this.route.params.subscribe(routeParams => {
-      // this.game.currentChallengeRef = routeParams['challengeId'] || "";
-  
       this.updateCurrentChallenge(routeParams['challengeId'] || "");
-      
     });
 
   }
@@ -178,15 +152,6 @@ module.exports = ${this.challenge.data.function.name};
         });
 
       } 
-      // else {
-      //   this.dialog.open(ScoreDialogComponent, {
-      //     data: {
-      //       challengeRef: 'compete',
-      //       testsData: jsonResult
-      //     },
-      //     panelClass: ['my-dialog']
-      //   });
-      // }
     }
     if (this.game.currentChallengeRef === "compete") {
       this.dialog.open(ScoreDialogComponent, {
@@ -205,7 +170,7 @@ module.exports = ${this.challenge.data.function.name};
       console.log(resultFile);
       this.jsonResult = JSON.parse(resultFile);
     } catch (error) {
-
+      console.log(error);
     }
   }
 
@@ -223,7 +188,7 @@ module.exports = ${this.challenge.data.function.name};
     }
   }
 
-  onInputInput(e: any) {
+  onInputInput() {
     this.promptInput.nativeElement.style.height = `${this.initialPromptInputHeight}px`;
     this.promptInput.nativeElement.style.height = `${this.promptInput.nativeElement.scrollHeight}px`;
     const nbLines = Math.round(this.promptInput.nativeElement.scrollHeight / 18);

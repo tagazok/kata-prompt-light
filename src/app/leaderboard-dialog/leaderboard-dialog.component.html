@@ -1,15 +1,18 @@
-<div class="leaderboard prompt padding-1">
+<div class="leaderboard prompt">
     <div class="title margin-bottom-1">Leaderboard</div>
-    <div class="results">
-        <div class="header rank">#</div>
-        <div class="header label">USERNAME</div>
-        <div class="header value">SCORE</div>
-        <ng-container *ngFor="let user of leaders; let index = index">
-            <div class="rank">
-                <div class="circle flex justify-content-center align-items-center rank{{index + 1}}">{{index + 1}}</div>
-            </div>
-            <div class="label">{{user.user}}</div>
-            <div class="value">{{user.score}}</div>
-        </ng-container>
+    <div class="leads">
+        <div class="results">
+            <div class="header rank">#</div>
+            <div class="header label">USERNAME</div>
+            <div class="header value">SCORE</div>
+            <ng-container *ngFor="let user of leaders; let index = index">
+                <div class="rank">
+                    <div class="circle flex justify-content-center align-items-center rank{{index + 1}}">{{index + 1}}
+                    </div>
+                </div>
+                <div class="label">{{user.user}}</div>
+                <div class="value">{{user.score}}</div>
+            </ng-container>
+        </div>
     </div>
 </div>
