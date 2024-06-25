@@ -32,8 +32,12 @@ const schema = a.schema({
       id: a.id().required(),
       user: a.string().required(),
       score: a.integer().required(),
-      event: a.string()
+      event: a.string().required()
     })
+    .secondaryIndexes((index) => [
+      index('event')
+      .sortKeys(['score'])
+    ])
     .authorization((allow) => [allow.guest()]),
 
   BedrockResponse: a.customType({

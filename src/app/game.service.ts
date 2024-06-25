@@ -10,7 +10,7 @@ import { ChallengeTest, ChallengesData, Game, GameChallenges } from 'src/types';
 
 const referenceTime = 40; // Reference time for the challenge in seconds
 const timeBonusFactor = 0.5; // Time bonus factor (points per second saved)
-const event = "re:Invent2023";
+const event = "testEvent";
 
 
 @Injectable({

@@ -48,6 +48,10 @@
             grid-column: 1 / 2;
             text-align: center;
 
+            div {
+                box-sizing: border-box;
+            }
+
             .circle {
                 aspect-ratio: 1 / 1;
                 height: 100%;

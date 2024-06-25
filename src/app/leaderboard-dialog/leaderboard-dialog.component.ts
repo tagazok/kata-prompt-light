@@ -10,7 +10,7 @@ import { Schema } from 'amplify/data/resource';
 export class LeaderboardDialogComponent {
   leaders: any[] = [];
   amplifyClient: any;
-  
+
   constructor() {
     this.getLeaderBoard();
   }
@@ -19,11 +19,25 @@ export class LeaderboardDialogComponent {
 
     const amplifyClient = generateClient<Schema>();
 
-    const { data: leaders, errors } = await amplifyClient.models.Game.list({
-      limit: 10
+    const { data: leaders, errors } = await amplifyClient.models.Game.listGameByEventAndScore({
+      event: "testEvent",
+      score: {
+        gt: 0
+      }
+    }, {
+      limit: 10,
+      sortDirection: 'DESC'
     });
+
     if (!errors) {
       this.leaders = leaders;
     }
+
+    // const { data: leaders, errors } = await amplifyClient.models.Game.list({
+    //   limit: 10
+    // });
+    // if (!errors) {
+    //   this.leaders = leaders;
+    // }
   }
 }
