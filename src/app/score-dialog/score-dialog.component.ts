@@ -63,15 +63,15 @@ export class ScoreDialogComponent {
                   } else {
                     this.game.game!.score++
                   }
-                }, 30);
+                }, 15);
               } else {
                 this.scoreData.challenge++;
               }
-            }, 60)
+            }, 30)
           } else {
             this.scoreData.timeBonus++;
           }
-        }, 60)
+        }, 30)
       } else {
         this.scoreData.tests++;
       }

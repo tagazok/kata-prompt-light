@@ -44,7 +44,7 @@
               "node_modules/prismjs/prism.js"
             ],
             "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
           },
           "configurations": {
             "production": {

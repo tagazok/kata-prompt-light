@@ -17,14 +17,18 @@ export class HomeComponent {
   
   newGame() {
 
-    const rulesGameDialog = this.dialog.open(RulesDialogComponent, {
-      panelClass: ['my-dialog']
-    });
+    // const rulesGameDialog = this.dialog.open(RulesDialogComponent, {
+    //   panelClass: ['my-dialog']
+    // });
 
-    rulesGameDialog.afterClosed().subscribe(() => {
-      this.dialog.open(NewGameDialogComponent, {
-        panelClass: ['my-dialog']
-      });
+    // rulesGameDialog.afterClosed().subscribe(() => {
+    //   this.dialog.open(NewGameDialogComponent, {
+    //     panelClass: ['my-dialog']
+    //   });
+    // });
+
+    this.dialog.open(NewGameDialogComponent, {
+      panelClass: ['my-dialog']
     });
   }
 
