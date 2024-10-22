@@ -1,4 +1,4 @@
-# NgPromptEngineeringChallenge
+# Prompt Engineering Kata
 
 Take the prompt challenge and see if you can generate code that pass the tests!  
 
@@ -15,7 +15,7 @@ Be fast and pass all the tests to make it to the leaderboard 🏆
 
 
 
-Services used:
+## Technologies used
 - AWS Amplify
   - Hosting
   - Database
